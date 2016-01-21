@@ -500,8 +500,46 @@ The developed algorithm is based on structural analysis technique proposed in~\c
 
 % Line 287 ... FIXME translate paragraph
 
+Traversing of \nnn{the} denominator tree is conducted from leaves to the root in a reverse order with respect to breadth--first strategy.  For this purpose, a stack structure is used.  ....
+
+%line 280 Cannot understand the essence.
+
+As soon as a set of nodes of \nnn{TT--region} (subgraph) is recognized, the region is classified.  The templates (Fig.~\ref{fig:Regions}) are sequentially applied to the recognized \nnn{TT-region}.  If the region corresponds to a template it is considered to be \emph{determined} otherwise \emph{undetermined}.
+
+For the determined subgraphs a new abstract node is constructed.  The node embodies the subgraphs and bounding rectangle of the subgraph calculated according to rules defined in the template.  The Hierarchical \nnn{raskladchik} is applied to the undetermined regions followed by figuring out the bounding rectangle on the base of node coordinates.  The undetermined region is replaced with new abstract node.
+
+Finally, we obtain one abstract region, having no input and output arcs.  The region will contain all the hierarchy of folded subroutines.  The bounding rectangle is figured out for the region.  All graph nodes will be located inside the rectangle.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=1\textwidth]{Pic/Reg.eps}
+	\caption{Applicable templates}
+	\label{fig:Regions}
+\end{figure}
+
+\subsection{Raskladka process}
+\label{sec:raskladka-process}
+
+The R process is carried out recursively from top region down to lower regions.  For the top region initial coordinates is defined.  If a region has a template with visualization rules, the rules are applied.  The example of \texttt{if--then--else} operator is given in Fig.~\ref{fig:IfThenElse}.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.4\textwidth]{Pic/IfThenElse.eps}
+	\caption{Visualizing template got \texttt{if-then-else} operator}
+	\label{fig:IfThenElse}
+\end{figure}
+
+The coordinate computation rules for \texttt{if--then--else} operator is as follows:
+\begin{itemize}
+\item \texttt{if.x = x + abs(width - if.width) / 2};
+\item \texttt{then.x = x  + wDist / 2, then.y = y + if.height + hDist};
+\item \texttt{else.x = x - else.width - wDist / 2, else.y = y + if.height + hDist};
+\end{itemize}
+where \texttt{wDist} is a vertical distance between nodes, \texttt{hDist} is a horizontal distance.  These parameters is defined manually and reflect aesthetic criteria.  The visualizing rules are defined analogously for each template.  Thus, the R process is a sequential application of the visualizing rules for the folded regions (subgraphs).
+
 \subsubsection{Subsubsection Heading Here}
 Subsubsection text here.
+
 
 
 
