@@ -1,0 +1,9 @@
+*.zip
+*.aux
+*.log
+*.synctex.gz
+*-en.pdf
+*.bbl
+*.blg
+*.dvi
+auto/
