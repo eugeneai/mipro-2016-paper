@@ -59,8 +59,24 @@
 % manually specify the path to it like:
 % \documentclass[conference]{../sty/IEEEtran}
 
+\usepackage{algorithm2e}
 
-
+ % Перевод плагина
+\SetKwInput{KwData}{Input parameters}
+\SetKwInput{KwResult}{Result}
+\SetKwInput{KwIn}{Input data}
+\SetKwInput{KwOut}{Output Data}
+\SetKwIF{If}{ElseIf}{Else}{if}{then}{else\ if}{else}{end\ of\ condition}
+\SetKwFor{While}{while}{execute}{end\ of\ loop}
+\SetKw{KwTo}{to}
+\SetKw{KwRet}{return}
+\SetKw{Return}{return}
+\SetKwBlock{Begin}{begin\ block}{end\ block}
+\SetKwSwitch{Switch}{Case}{Other}{Check\ a\ value}{and\ execute}{a\ case}{otherwise}{end\ of\ case}{end\ of\ value\ check}
+\SetKwFor{For}{loop}{execute}{end\ of\ loop}
+\SetKwFor{ForEach}{for\ each}{execute}{end\ of\ loop}
+\SetKwRepeat{Repeat}{repeat}{while}
+\SetAlgorithmName{Algorithm}{algorithm}{List of algorithms}
 
 
 % Some very useful LaTeX packages include:
@@ -444,8 +460,45 @@ Nowadays programming languages in most cases contain a standard set of high--lev
 	\caption{Subgraph of if--then operator}
 	\label{fig:IfSt}
 \end{figure}
-% line 231 of the original.
 
+One can describe a corresponding subgraph for all standard high--level language flow control operators.  Each generated subgraph is described as a template.  The control operators are revealed and reconstructed in whole flow control graph by means of recognition of the templates in the graph and folding the recognized structure into an abstract node.  The arcs going into and from the abstract node are reconnected accordingly.  The reconstruction process is repeated until either the graph folds into one abstract node, and in this case graph is referred to as \emph{\nnn{reducible}}, or there is a subgraph that does not correspond to any of the templates.  In the last case the graph is called \emph{\nnn{inreducible}}, and the subgraph --- \emph{\nnn{indeterminate}}.
+
+Structural high--level programming languages compiler produces only reducible flow control graphs.  This will hold for most of other languages as long as ``goto'' operator is not used explicitly or implicitly.  There are to approaches for overcoming this problem:
+\begin{enumerate}
+\item Perform an indeterminate subgraph riddance operation.  The essential disadvantage of the approach is the necessity of addition and deletion of nodes and arcs in the graph, this is not allowed in control flow graph model visualization.
+\item Recognize the indeterminate subgraph and replace it with an abstract node.  \nnn{Some COMMENT NEEDED whether IT IS GOOD OR BAD.}
+\end{enumerate}
+
+\subsection{Algorithm of control flow graph structuring}
+\label{sec:algor-contr-flow}
+
+The developed algorithm is based on structural analysis technique proposed in~\cite{17} that suggest to recognize subgraph of a predefined form (a template) and replace them with an abstract node, reassigning arc \nnn{terminals} accordingly.  Template application is carried out in depth-first order until the graph folds into one abstract node.  A tree of dominating nodes is constructed.  The tree is used for arc classification and cycle recognition.  The result quality strongly depends on template application order. The algorithm is as follows:
+
+\begin{algorithm}[h]
+\SetAlgoLined %% Connects logical parts with lines
+\KwData{G, D, P}
+\KwResult{An abstract node containing a hierarchy of folded subgraphs}
+%\While{$|E| \neq 0$ и $|V| \neq 1$}{
+	\ForEach{$v \in D$ in backward order}{
+		\ForEach{$p \in Children(v)$}{
+			\If{$p\quad pidom\quad v$}{
+				$S \leftarrow Children(v) \setminus p $ \\
+				\If{$Classify\_Region(S) \neq \textit{indeterminat}$}{
+					$Apply\_Template(S)$
+				}\Else{
+					$Hierarchical\_Placer(S \cup p)$ \\
+					$Recognize\_Indeterminant\_Region(S)$
+				}
+				$Modify(G,D,P)$
+			}
+		}
+	}
+%}
+\caption{Algorithm of control flow graph structuring}
+\label{alg:struct}
+\end{algorithm}
+
+% Line 287 ... FIXME translate paragraph
 
 \subsubsection{Subsubsection Heading Here}
 Subsubsection text here.
