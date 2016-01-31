@@ -356,7 +356,7 @@
 % use a multiple column layout for up to three different
 % affiliations
 \author{\IEEEauthorblockN{Andrey Mikhailov${}^{*}$, Aleksey Hmelnov${}^{*}$, Evgeny Cherkashin${}^{*\;**}$ and Igor Bychkov${}^{*}$}
-\IEEEauthorblockA{${}^{*}$Institute of System Dynamics and Control Theory, \\
+\IEEEauthorblockA{${}^{*}$Institute of System Dynamics and Control Theory at Siberian Branch of Russian Academy of Sciences, \\
 ${}^{**}$National Research Irkutsk State Technical University,\\
 Irkutsk, Russian Federation\\
 \texttt{\{mikhailov,alex,eugeneai,bychkov\}@icc.ru}}
@@ -479,11 +479,11 @@ The developed algorithm is based on structural analysis technique proposed in~\c
 		\ForEach{$p \in Children(v)$}{
 			\If{$p\quad pidom\quad v$}{
 				$S \leftarrow Children(v) \setminus p $ \\
-				\If{$Classify\_Region(S) \neq \textit{indeterminat}$}{
+				\If{$Classify\_Region(S) \neq \textit{undeterminated}$}{
 					$Apply\_Template(S)$
 				}\Else{
-					$Hierarchical\_Placer(S \cup p)$ \\
-					$Recognize\_Indeterminant\_Region(S)$
+					$Hierarchical\_Layout(S \cup p)$ \\
+					$Recognize\_Undeterminanted\_Region(S)$
 				}
 				$Modify(G,D,P)$
 			}
@@ -494,15 +494,16 @@ The developed algorithm is based on structural analysis technique proposed in~\c
 \label{alg:struct}
 \end{algorithm}
 
-% Line 287 ... FIXME translate paragraph
+% Построим дерево доминиаторов $D$ и постдоминаторов $P$ для графа $G(E,V)$.
+% In order to construct a tree of dominator $D$ and postdominator $P$.
 
-Traversing of the denominator tree is conducted from leaves to the root in a reverse breadth-first traversal order.  For this purpose, a stack structure is used.  ....
+If a program has no predefined terminating nodes, the nodes is figured out by means of the following procedure.  Firstly, the edges are categorized as forward, backward and \nnn{oblique}.  Among nodes connected with forward edges there will be at least one that has no originating edge.  If we found the only node, then the node is termination one.  Otherwise all such nodes are connected with edges to an additional fictitious termination node.  The obtained graph is correct as the termination node is accessed from any node of the graph.
+
+Traversing of \nnn{the} dominator tree is done in a reverse breadth-first order, i.e. from leaves to the root, placing graph nodes in a \texttt{stack} structure.  A region having the deepest folding level (\nnn{TT-region}) is determined on each iteration of the algorithm according to the rule $p$~$pidom$~$v$ \nnn{: a/the} postdominator of node $v$ of $S$ is the terminal node, where the control flow passing $v$ converges.  This node is not added to the region as it could be a terminal node of other region of the graph.
 
 %line 280 Cannot understand the essence.
 
-TT-region???
-
-\nnn{As soon as a set of nodes of TT--region (subgraph) is recognized, the region is classified}.  The templates (Fig.~\ref{fig:Regions}) are sequentially applied to the recognized TT-region.  If the region corresponds to a template it is considered to be \emph{determined} otherwise \emph{undetermined}.
+\nnn{As soon as a set of nodes of TT--region (subgraph) is recognized, the region is also categorized with templates}.  The templates (Fig.~\ref{fig:Regions}) are sequentially applied to the recognized TT-region.  If the region corresponds to a template it is considered to be \emph{determined} otherwise \emph{undetermined}.
 
 For the determined regions a new abstract node is constructed.  The node embodies its subgraphs, and bounding rectangle of the region calculated according to rules defined in the template.  The Hierarchical layout engine is applied to the undetermined regions followed by figuring out the bounding rectangle on the base of node coordinates.  The undetermined region is replaced with new abstract node.
 
@@ -640,7 +641,14 @@ Subsubsection text here.
 % footnotes above bottom floats. This can be corrected via the
 % \fnbelowfloat command of the stfloats package.
 
+\section{Further development (CAN BE MERGED WITH Conclusion if small)}
+\label{sec:further-development}
 
+The results of the control flow graph analysis could be used in construction of Model driven engineering (MDE)~\cite{book,eugeneai} software development tools.  The nowadays approaches to MDE is based on change propagation between various models of the software, e.g., source code generation from UML and BPMN2.0, and (in backward direction) refactoring the high-level models according to local source code modification.  Comparing results of control flow graph analysis could determine initial change of the structure of the source code, then the change is propagated to the higher-level models.  This is however a very complex fundamental problem containing both deduction and induction stages.
+
+Another useful application of the described techniques is ....
+
+Finally we need to mention a problem of ... that related to the analysis of control flow graph...
 
 
 \section{Conclusion}
