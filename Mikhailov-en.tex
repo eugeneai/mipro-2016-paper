@@ -479,7 +479,7 @@ A control flow graph that was reconstructed from a binaries consists of operator
 Nowadays programming languages in most cases contain a standard set of high--level control flow operators (\texttt{if--then}, \texttt{if--then--else}, \texttt{for}, \texttt{while}, etc.).  These operators during compilation produce their specific subgraphs.  For example, \texttt{if--then} operator produces a graph depicted in Fig.~\ref{fig:IfSt}, where \texttt{then} part could correspond to another control subgraph.
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.15\textwidth]{Pic/Pic2.eps}
+		\includegraphics[width=0.11\textwidth]{Pic/Pic2.eps}
 	\caption{Subgraph of \texttt{if--then} operator}
 	\label{fig:IfSt}
 \end{figure}
@@ -538,7 +538,7 @@ Finally, we obtain one abstract region, having no input and output edges.  The r
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=1\textwidth]{Pic/Reg.eps}
+		\includegraphics[width=0.49\textwidth]{Pic/Reg.eps}
 	\caption{Applicable templates}
 	\label{fig:Regions}
 \end{figure}
@@ -550,7 +550,7 @@ The layout process is carried out recursively from top region down to lower regi
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.4\textwidth]{Pic/IfThenElse.eps}
+		\includegraphics[width=0.3\textwidth]{Pic/IfThenElse.eps}
 	\caption{Visualizing template got \texttt{if-then-else} operator}
 	\label{fig:IfThenElse}
 \end{figure}
@@ -675,6 +675,18 @@ Let's consider a result of our algorithm in comparison to one of a hierarchic la
 
 %  а) иерархический, б) структурный
 % fig
+\begin{figure}[htb]
+	\begin{minipage}[b]{0.49\linewidth}
+	\center{\includegraphics[width=0.49\textwidth]{Pic/Hgraph.pdf} \\\footnotesize \emph{a}) Hierarchical layout}
+	\end{minipage}
+\hfill
+\begin{minipage}[b]{0.49\linewidth}
+	\center{\includegraphics[width=0.61\textwidth]{Pic/Sgraph.pdf} \\\footnotesize \emph{b}) Structural layout}
+	\end{minipage}
+	\caption{Layout of a control flow graph}
+	\label{fig:image1}
+\end{figure}
+
 
 \section{Further development (CAN BE MERGED WITH Conclusion if small)}
 \label{sec:further-development}
