@@ -425,7 +425,7 @@ Irkutsk, Russian Federation\\
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-Reverse engineering of the compiled software is an important task in software engineering.  One of the stages of reverse engineering technologies is a construction and analysis of a control flow graphs, which reflect general structures of corresponding algorithms.  The paper presents a technique for analyzing and visualizing the control flow graph of a compiled software.  The analysis is based on semantically equivalent transformations of the original graph resulting in an abstract node that contains a hierarchy of isolated regions, which then associated with predefined templates to form resulting graphical representation.  The templates and additional signature data allow one to recognize the high--level programming structures and user statements to construct a flow-chart notation of the original program, increasing both the productivity of software reverse engineering and detail level of the software description.
+Reverse engineering of the compiled software is an important task in software engineering.  One of the stages of reverse engineering technologies is a construction and analysis of a control flow graphs, which reflect general structures of corresponding algorithms.  The paper presents a technique for analyzing and visualizing the control flow graph of a compiled software.  The analysis is based on semantically equivalent transformations of the original graph resulting in an abstract node that contains a hierarchy of isolated regions, which then associated with predefined templates to form resulting graphical representation.  The templates and additional signature data allow one to recognize the high-level programming structures and user statements to construct a flow-chart notation of the original program, increasing both the productivity of software reverse engineering and detail level of the software description.
 \end{abstract}
 
 % no keywords
@@ -446,17 +446,17 @@ Reverse engineering of compiled software (programs after processing its source c
 
 The control flow graph is a natural representation that can be automatically figured out from the source code or its compiled binaries.  The graph is used by compiler as an intermediate structure for optimizing transformations.  The source code text contains all the necessary information on program behavior.  Its analysis usually is a complex task even with technological support of nowadays integrated development environments, which make the analysis significantly easier.
 
-Binary code analysis is a more complex task, and it requires a wide variety of IT knowledge.  Special software such as disassemblers and decompilers are used for this purpose.  The decompiling of a binary runtime is in principle an impracticable task: the reconstructed high--level code is more difficult in understanding as compared to its assembler representation.  The visual analysis of the control flow graph is an alternate way.  There are a number of visual representation and processing software, which are relatively universal, such as uDraw (daVinci)~\cite{10}, VCG~\cite{14}, Graphlet~\cite{12}, GraVis~\cite{13}, Graph Drawing Server~\cite{9}, graphViz~\cite{11}, VisualGraph~\cite{15}.  These systems have a broad toolkits, but visualization and analysis of control flow graph requires a special processing routines.
+Binary code analysis is a more complex task, and it requires a wide variety of IT knowledge.  Special software such as disassemblers and decompilers are used for this purpose.  The decompiling of a binary runtime is in principle an impracticable task: the reconstructed high-level code is more difficult in understanding as compared to its assembler representation.  The visual analysis of the control flow graph is an alternate way.  There are a number of visual representation and processing software, which are relatively universal, such as uDraw (daVinci)~\cite{10}, VCG~\cite{14}, Graphlet~\cite{12}, GraVis~\cite{13}, Graph Drawing Server~\cite{9}, graphViz~\cite{11}, VisualGraph~\cite{15}.  These systems have a broad toolkits, but visualization and analysis of control flow graph requires a special processing routines.
 
-Algorithms of graph visualization are developed since \nnn{60--ties}~\cite{7}.  The works of P.~Eades~\cite{5}, T.~Kamada~\cite{q1}, and S.~Kawai~\cite{6} considered to be classical in this research field, they deal with universal approaches to graph visualization problems.  The control flow graph is directed and usually visualized by means of layers~\cite{4}.  The process consists of four stages:
+Algorithms of graph visualization are developed since \nnn{60-ties}~\cite{7}.  The works of P.~Eades~\cite{5}, T.~Kamada~\cite{q1}, and S.~Kawai~\cite{6} considered to be classical in this research field, they deal with universal approaches to graph visualization problems.  The control flow graph is directed and usually visualized by means of layers~\cite{4}.  The process consists of four stages:
 \begin{itemize}
-\item \textbf{Distribution of graph nodes \nnn{in}\rrr{into} a layer.} Each node is assigned a rank.  All directed edges can connect nodes from a lower rank to a higher one.  \rrr{Nodes of the same rank cannot be connected with edges}.  Rank distribution of the nodes is performed with various techniques, the simplest one is based on path length calculation in depth--first graph traversal procedure.
+\item \textbf{Distribution of graph nodes \nnn{in}\rrr{into} a layer.} Each node is assigned a rank.  All directed edges can connect nodes from a lower rank to a higher one.  \rrr{Nodes of the same rank cannot be connected with edges}.  Rank distribution of the nodes is performed with various techniques, the simplest one is based on path length calculation in depth-first graph traversal procedure.
 \item \textbf{Defining order on the nodes in a layer.} The nodes of a layer are ordered according to principle of minimization of intersections of \nnn{the edges !WE SAID that THERE ARE NO CONNECTIONS of THE NODES OF THE SAME RANK!}.  \nnn{Method of median (p-median ??)}~\cite{8} is most widely used technique for solving the problem.
 \item \textbf{Figuring out of the node coordinates in a layer.} Each node of each layer is assigned a coordinate so as the graph will correspond to predefined aesthetic criteria.
 \item \textbf{Edge drawing.} On this stage the edges are drawn according to \nnn{criteria (what criteria? predefined??)}, for example, \nnn{edges can be indirect lines}.
 \end{itemize}
 
-The paper describes a technique \nnn{and software tools} for analyzing and visualizing the control flow graph of a compiled binaries.  The analysis is based on semantically equivalent transformations of the original graph resulting in a singular abstract node that contains a hierarchy of isolated regions (subgraphs).  The regions are associated with predefined templates to form resulting graphical representation.  The templates \nnn{and additional signature data} for library modules allow one to recognize among the regions the high--level programming language structures and statements, e.g., to construct flow--chart notation of the original program.
+The paper describes a technique \nnn{and software tools} for analyzing and visualizing the control flow graph of a compiled binaries.  The analysis is based on semantically equivalent transformations of the original graph resulting in a singular abstract node that contains a hierarchy of isolated regions (subgraphs).  The regions are associated with predefined templates to form resulting graphical representation.  The templates \nnn{and additional signature data} for library modules allow one to recognize among the regions the high-level programming language structures and statements, e.g., to construct flow-chart notation of the original program.
 
 \section{Control flow graph visualization}
 
@@ -526,17 +526,17 @@ In this paper, we consider an layout algorithm that visualizes control flow acco
 \section{Control flow graph visualizing}
 \label{sec:cfg-vis}
 
-Nowadays programming languages in most cases contain a standard set of high--level control flow operators (\texttt{if--then}, \texttt{if--then--else}, \texttt{for}, \texttt{while}, etc.).  These operators during compilation produce their specific subgraphs.  For example, \texttt{if--then} operator produces a graph depicted in Fig.~\ref{fig:IfSt}, where \texttt{then} part could correspond to another control subgraph.
+Nowadays programming languages in most cases contain a standard set of high-level control flow operators (\texttt{if-then}, \texttt{if-then-else}, \texttt{for}, \texttt{while}, etc.).  These operators during compilation produce their specific subgraphs.  For example, \texttt{if-then} operator produces a graph depicted in Fig.~\ref{fig:IfSt}, where \texttt{then} part could correspond to another control subgraph.
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=0.11\textwidth]{Pic/Pic2.eps}
-	\caption{Subgraph of \texttt{if--then} operator}
+	\caption{Subgraph of \texttt{if-then} operator}
 	\label{fig:IfSt}
 \end{figure}
 
-One can describe a corresponding subgraphs for all flow control operators of all standard high--level languages.  Each generated subgraph is described as a template.  The control operators are revealed and reconstructed in whole flow control graph by means of recognition of the templates in the graph and folding the recognized structure into an abstract node.  The edges terminating at and originating from the abstract node are reconnected accordingly.  The reconstruction process is repeated until either the graph folds into one abstract node, and in this case graph is referred to as \emph{reducible}, or there is a subgraph that does not correspond to any of the templates.  In the last case the graph is called \emph{inreducible}, and the subgraph that was not recognized is named \emph{undeterminate}.
+One can describe a corresponding subgraphs for all flow control operators of all standard high-level languages.  Each generated subgraph is described as a template.  The control operators are revealed and reconstructed in whole flow control graph by means of recognition of the templates in the graph and folding the recognized structure into an abstract node.  The edges terminating at and originating from the abstract node are reconnected accordingly.  The reconstruction process is repeated until either the graph folds into one abstract node, and in this case graph is referred to as \emph{reducible}, or there is a subgraph that does not correspond to any of the templates.  In the last case the graph is called \emph{inreducible}, and the subgraph that was not recognized is named \emph{undeterminate}.
 
-Structural high--level programming language compilers produce only reducible flow control graphs.  This will hold for most of other languages as long as \texttt{goto} operator is not used explicitly or implicitly.  There are two approaches for overcoming this problem:
+Structural high-level programming language compilers produce only reducible flow control graphs.  This will hold for most of other languages as long as \texttt{goto} operator is not used explicitly or implicitly.  There are two approaches for overcoming this problem:
 \begin{enumerate}
 \item Perform an undeterminate subgraph riddance operation.  The essential disadvantage of the approach is the necessity of addition and deletion of nodes and edges in the graph, this is not allowed in control flow graph model visualization.
 \item Recognize the undeterminate subgraph and replace it with an abstract node.  \nnn{Some COMMENT NEEDED whether IT IS GOOD OR BAD.}
@@ -596,7 +596,7 @@ Finally, we obtain one abstract region, having no input and output edges.  The r
 \subsection{Layout engine}
 \label{sec:raskladka-process}
 
-The layout process is carried out recursively from top region down to lower regions.  For the top region initial coordinates is predefined.  If a region has a template with visualization rules, the rules are applied.  The layout example an \texttt{if--then--else} operator is given in Fig.~\ref{fig:IfThenElse}.
+The layout process is carried out recursively from top region down to lower regions.  For the top region initial coordinates is predefined.  If a region has a template with visualization rules, the rules are applied.  The layout example an \texttt{if-then-else} operator is given in Fig.~\ref{fig:IfThenElse}.
 
 \begin{figure}[b]
 	\centering
@@ -605,7 +605,7 @@ The layout process is carried out recursively from top region down to lower regi
 	\label{fig:IfThenElse}
 \end{figure}
 
-The coordinate computation rules for \texttt{if--then--else} operator is as follows:
+The coordinate computation rules for \texttt{if-then-else} operator is as follows:
 \begin{itemize}
 \item \texttt{if.x = x + abs(width - if.width) / 2};
 \item \texttt{then.x = x  + wDist / 2, then.y = y + if.height + hDist};
