@@ -1,0 +1,356 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{amssymb,amsfonts,graphics, graphicx, amsthm, amscd}
+\usepackage[cmex10]{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+
+\usepackage{enumerate}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+
+\tolerance=500
+
+\headheight=0mm
+\headsep=0mm
+\textwidth=180mm
+\textheight=250mm
+\topmargin=-10mm
+\oddsidemargin=-10mm
+\evensidemargin=-10mm
+
+
+\title{Обработка позитивно-образованных формул\\ перед автоматическим поском вывода.\thanks{RSCF}}
+\author{Давыдов А.В., Ларионов А.А., Черкашин Е.А.}
+\date{}
+%\author{\IEEEauthorblockN{
+%Evgeny Cherkashin\IEEEauthorrefmark{2},
+%Artem Davydov\IEEEauthorrefmark{1} and 
+%Alexander Larionov\IEEEauthorrefmark{1}}
+%\IEEEauthorblockA{\IEEEauthorrefmark{1}Institute for System Dynamics and Control Theory at Siberian Branch of Russian Academy of Sciences\\
+%134, Lermontov str., Irkutsk, Russia\\ Emails: idstu@icc.ru,artem@icc.ru,alexander@prisnif.org}
+%\IEEEauthorblockA{\IEEEauthorrefmark{2}Irkutsk National Research Technical University, 83, Lermontov str., Irkutsk, Russia\\
+%Email: eugene@irnok.net}}
+
+
+\begin{document}
+
+
+
+\maketitle
+
+\begin{abstract}
+В работе рассмотрены вопросы обработки позитивно-образованных формул перед запуском автоматических алгоритмов поиска вывода. Представлен новый эффективный алгоритм преобразования формул языка исчисления предикатов в язык позитивно-образованных формул, а также эквивалентные правила сокращения ПО-формул, сохраняющие исходную эвристическую структуру знаний представленных формулами языка исчисления предикатов.
+
+The processing of positively-constructed formulas (PCFs) before starting the automatic deduction search algorithms is considered. A new efficient algorithm for conversion of the predicate calculus language formulas to the language of PCFs and equivalent rules of reducing PCFs, preserving the original heuristic structure of knowledge represented by the formulas of the predicate calculus language are presented.
+
+\end{abstract}
+
+
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\newcommand{\fictAquantor}{\ensuremath{\forall\colon\varnothing}}
+\newcommand{\fictEquantor}{\ensuremath{\exists\colon\varnothing}}
+\newcommand{\bomega}{\boldsymbol{\omega}}
+\newcommand{\bphi}{\boldsymbol{\phi}}
+\newcommand{\eqdef}{\stackrel{\mathrm{df}}{=}}
+\newcommand{\bigand}[2]{\raisebox{-2pt}{\ensuremath{\overset{#1}{\underset{#2}{\text{\Large\&\normalfont}}}}}}
+
+
+
+\section{Introduction}
+
+Originally \cite{SNV1990,ICDS2000} the calculus of positively constructed formulas (PCF) was developed by Russian scientists S.N. Vassilyev and A.K. Zherlov by an evolutionary way in describing and solving control theory (CT) problems. In \cite{ICDS2000} the PCF calculus is presented as first-order logical formalism (further development presendted in \cite{jour2} ), examples of CT problems described and solved by the PCF calculus (elevator group control, mobile robot action planning and telescope guidance), as well as proof of soundness and completeness.
+
+The PCF calculus is both machine-oriented, and also human-oriented, naturally aimed at solving the problems of dynamic systems control thanks to its features such as follows: unique inference rule and simple scheme of axioms; modifyability of semantics (constructive, monotonic, temporal, etc.) and besides it is possible to construct intuitionistic inferences of some non-Horn formulas; the explicit usage of $\forall$ and $\exists$ quantifiers, the scolemization procedure is not required.
+
+However, in this paper, we will not cover the human--orientation properties of the PCF calculus and its dynamic systems control properties as well.  This and the calculus capabilities in action planning is described in \cite{ICDS2000}. Вопросы автоматического поиска вывода и реализация прувера рассмотрена в  \cite{mipro2013}. 
+
+This paper contains a description of the PCF language, transformation of formulas to PCF's form and the processing of PCFs before starting the automatic deduction search algorithms. Преобразование формул с языка исчисления предикатов (ИП) в язык ПО-формул является не простой задачей. А.К. Жерловым в его кандидатской диссертации был предложен такой алгоритм, который затем был реализован в прувере Черкашиным Е.А. В данной работе предлагается более эффективный алгоритм, под эффективностью понимается количество шагов и длина получаемых ПО-формул (под длиной можно понимать количество кванторов и ветвлений в древовидном представлении).
+
+%Here, we deal with the automatic search of a logical inference, i.e., the inference engine capabilities.  In order to estimate the applicability of the PCF calculus for automatic theorem proving we develop a prover program and test it on problems from TPTP library.
+
+%This paper contains a description of the PCF calculus, an implementation of the prover program, and strategies of logical inference used to direct the inference search algorithms. The results of a comparison of the developed prover system with other provers are presented.
+
+
+%=======================================================================
+%==========================BACKGROUND===================================
+%=======================================================================
+\section{Preliminaries}
+
+We consider a language of first-order logic (FOL) that consists of first-order formulas (FOFs) built out of atomic formulas with $\&, \vee, \neg, \rightarrow, \leftrightarrow$ operators, $\forall$ and $\exists$ quantifier symbols and constants $\text{\textbf{True}}$ and $\text{\textbf{False}}$.  The concepts of \emph{term}, \emph{atom}, \emph{literal} we define in the usual way.
+
+Let $X = \{x_1,\ldots,x_k\}$ be a set of variables, $A = \{A_1,\ldots,A_m\}$ be a set of atomic formulas, and $F = \{F_1,\ldots,F_n\}$ be a set of subformulas. Then the following formulas $((\forall x_1) \ldots (\forall x_k) (A_1 \& \ldots \& A_m \rightarrow (F_1 \vee \ldots \vee F_n)))$ and $((\exists x_1) \ldots (\exists x_k) (A_1 \&$ $\ldots \& A_m \& (F_1 \& \ldots \& F_n)))$ are denoted as  $\forall_XA\colon F$ and $\exists_XA\colon F$ respectively, keeping in mind that the $\forall$--quantifier corresponds to $\rightarrow F^{\vee}$, where $F^{\vee}$ means disjunction of all subformulas from $F$, and $\exists$--quantifier corresponds to $\& F^{\&}$, where $F^{\&}$ means conjunctions of all subformulas from $F$.
+
+If $F = \varnothing$, then the formulas have the form $\forall_XA\colon\varnothing \equiv \forall_XA \rightarrow \text{\textbf{False}}$ and $\exists_XA\colon\varnothing \equiv \exists_XA \& \text{\textbf{True}}$, since the empty disjunction is identical to $false$, whereas the empty conjunction is identical to $\text{\textbf{True}}$.  The form $\forall_XA$ and $\exists_XA$ are abbreviations of such formulas.  If $X = \varnothing$, then $\forall A\colon F$ and $\exists A\colon F$ are analogous abbreviations.
+
+The set of atoms $A$ is called {\em conjunct}. The empty conjunct is identical to $\text{\textbf{True}}$ as it was already mentioned.
+
+Variables from $X$ are bound by corresponding quantifiers and called $\forall$--variables and $\exists$--variables, respectively. In $\forall_XA$, a variable from $X$ that does not appear in conjunct $A$ is called {\em unconfined} variable.
+
+%В связи с изложенными сокращениями отметим следующий факт:
+$\forall \varnothing \equiv \forall \varnothing\colon\varnothing \equiv \forall \text{\textbf{True}} \rightarrow \text{\textbf{False}} \equiv \text{\textbf{False}}$
+
+Construction $\forall_XA$ and $\exists_XA$ are called positive \emph{type quantifiers} (TQ), because $A$ is a conjunction of only positive atoms and referred to as also as \emph{type condition} for $X$. In practice, this constructions denote phrases such as follows: ``for all $X$ satisfying $A$ there is...'' or ``there exists $X$ satisfying property $A$ such that...''; ``for all integer $x,y,z$ and $n>2$ there is $x^n + y^n \ne z^n$''.
+
+Originally, the term ``type quantifier'' was introduced by N.~Bourbaki \cite{Bourbaki} as part of notation for formalization of mathematics. But type quantifiers are stable in languages of another applied fields.
+
+%========================================================
+\subsection{PCF Language}
+
+\begin{definition}[Positively--constructed formulas (PCF)]
+\label{def:pcf}
+Let, $X$ be a set of variables, and $A$ be a conjunct.
+\begin{enumerate}
+
+\item $\exists_XA$ and $\forall_XA$ are $\exists$--PCF and $\forall$--PCF respectively.
+
+\item If $F = \{F_1,\ldots,F_n\}$ are $\forall$--PCF, then $\exists_XA\colon F$ is a $\exists$--PCF.
+
+\item If $F = \{F_1,\ldots,F_n\}$ are $\exists$--PCF, then $\forall_XA\colon F$ is a $\forall$--PCF.
+
+\item Any $\exists$--PCF or $\forall$--PCF is a PCF.
+\end{enumerate}
+\end{definition}
+
+This form of logical formulas is referred to as positively constructed formulas (PCFs), as they are written with only positive type quantifiers. The formulas contain no explicit logic negation sign. Any FOF can be represented as PCF \cite{ICDS2000}.
+%Таким образом ПО--формула есть особый вид записи классических формул языка предикатов, подобно КНФ, ДНФ и др.
+
+PCF that started from $\forall \varnothing$ is called PCF in a {\em canonical form}. Any PCF can be represented in the canonical form. Let $F$ is a $\exists$--PCF, then formula
+$\forall \varnothing\colon F \equiv \text{\textbf{True}} \rightarrow F \equiv F$. If $F$ is a non-canonical $\forall$--PCF, then $\forall \varnothing\colon\{\exists \varnothing\colon F\} \equiv \text{\textbf{True}} \rightarrow \{\text{\textbf{True}}\&F\} \equiv F$. Type quantifiers $\forall \varnothing$ and $\exists \varnothing$ are called {\em fictitious}, since they do not influence on truth value of an original PCF and do not bind any variables.  %а только лишь служат конструкциями сохраняющими корректную запись ПОФ.
+
+%Для удобства читаемости формул, будем представлять их в древовидной форме следующим образом:
+The PCFs are usually represented as trees for more ease reading, i.e. $Q_XA\colon\{F_1,\ldots,F_n\}$ is equivalent to:
+\begin{center}
+\begin{tikzpicture}
+\tikzset{grow'=right}
+%\tikzset{execute at begin node=\strut}
+\tikzset{level distance=80pt}
+\tikzset{every tree node/.style={align=left,anchor=west}}
+\Tree [. $Q_XA$ $F_1$ $\cdots$ $F_n$ ]
+\end{tikzpicture}
+\end{center}
+\noindent where $Q$ is a quantifier. Tree elements have conventional names: \emph{node}, \emph{root}, \emph{leaf}, \emph{branch}, etc. As the quantifiers $\forall$ correspond to disjunctions of formulas $\{F_1,\ldots,F_n\}$ (quantifiers $\exists$ correspond to a conjunction), then all $\forall$-nodes correspond a {\em disjunctive branching}, and for $\exists$-nodes correspond to {\em conjunctive branching}.
+
+Some parts of canonical PCF are denoted as follows:
+\begin{enumerate}
+\item PCF root $\forall \varnothing$ is called PCF {\em root}.
+\item Each PCF root child $\exists_XA$ is called PCF {\em base}, conjunct $A$ is called {\em base of facts}, and PCF rooted from base is called {\em base subformula}.
+\item PCF base children $\forall_YB$ are called {\em questions} to its parent base.  If a question is a leaf of a tree then it is called {\em goal question}.
+\item Subtrees of questions are called {\em consequents}.  The absent consequent of a goal question is identical to $\text{\textbf{False}}$.
+\end{enumerate}
+
+%как правило
+%In the sequel, only PCFs in the canonical form are considered.
+%----------------------
+
+\begin{example}
+Let us consider a PCF representation of a FOF.
+$$F= \neg\bigl(\forall x\:\exists y P(x,y)\rightarrow \exists z P(z,z)\bigr).$$
+An image $F'$ of $F$ in the PCF language is $F' = \forall\colon \varnothing\{\exists\colon\varnothing\{\forall x\colon\varnothing\{\exists y\colon P(x,y)\}, \forall z\colon P(z,z)\{\exists\colon\boldsymbol{False}\}\}\}.$
+%А эта ПО-формула в древовидной форме имеет следующий вид+++++++++++++++++++++++++
+The tree--like form of the latter is as follows:
+\begin{center}
+\begin{tikzpicture}
+\tikzset{grow'=right}
+%\tikzset{execute at begin node=\strut}
+\tikzset{level distance=80pt}
+\tikzset{every tree node/.style={align=left,anchor=west}}
+\Tree [. $\forall\colon\varnothing$ [. $\exists\colon\varnothing$ [. $\forall x\colon\varnothing$ $\exists y\colon P(x,y)$ ] [. $\forall z\colon P(z,z)$ $\exists\colon\boldsymbol{False}$ ] ] ]
+\end{tikzpicture}
+\end{center}
+\end{example}
+
+\section{Transformation algorithm}
+
+Этот параграф посвящен изложению основного результата работы - алгоритма преобразования формул языка ИП в язык ПОФ.
+
+Перед тем как алгоритм начинает свою работу, в формуле поступающей на вход необходимо: 
+\begin{itemize}
+\item удалить все связки $\leftrightarrow$ и $\rightarrow$ по известным эквивалентностям $F_1\leftrightarrow F_2 = (F_1\rightarrow F_2)\&(F_2\rightarrow F_1)$ и $F_1\rightarrow F_2 = \neg F_1 \vee F_2$;
+\item применить законы ДеМоргана $\neg (F_1\&\ldots\& F_n)=\neg F_1\vee\ldots\vee\neg F_n$, $\neg (F_1\vee\ldots\vee F_n)=\neg F_1\&\ldots\&\neg F_n$, $\neg\forall x F = \exists x \neg F$, $\neg\exists x F = \forall x \neg F$  и снятия двойного отрицания $\neg\neg F = F$ для переменщения символов $\neg$ непосредственно к атомам.
+\end{itemize}
+Следует заметить, что подобные замены разрушают исходную структуру знания, предсталяемую формулой исчисления предикатов, однако, правила сокращения, представленные ниже, дают гарантию того, что представление в виде ПОФ, будет наиболее точно соответствовать исходной формуле. Устранение связок  $\leftrightarrow$ и $\rightarrow$ позволяет наиболее просто определить алгоритм преобразования на основе синтаксических деревьев, определяемых для формул исчисления предикатов следующим образом.
+
+Пусть $F$ - преобразованная по приведенным выше правилам формула исчисления предикатов. Синтаксическим деревом формулы $F$ называется дерево, корнем которого является:
+\begin{enumerate}
+\item Сама формула $F$, если $F$ является атомом или отрицанием атома.
+\item Квантор $\forall x$ или $\exists x$, если $F$ имеет вид $\forall x G$ или $\exists x G$ соответственно, при этом, поддеревом этого узла является  синтаксическое дерево для подформулы $G$.
+\item Логическая связка $\circ$, если $F$ имеет вид $G_1\circ\ldots\circ G_n$, где $\circ$ - одна из связок $\&,\vee$, при этом поддеревьями этого узла являются синаксические деревья формул $G_i, \forall i=\overline{1,n}$ соответственно. Связка $\&$ в формуле, как обычно, имеет больший приоритет чем $\vee$, если подформулы не выделены скобками, например в формуле $\neg A \& B \vee C$, две подформулы $G_1 = \neg A\& B$ и $G_2 = C$.
+\end{enumerate}
+Таким образом построенное дерево листами имеет атомы или отрицания атомов. Для каждого узла $N$ дерева $T$, $G_N$ будет обозначать подформулу формулы $F$, соответствующую поддереву $T'$ с корнем в узле $N$. $N'_i,\forall i=\overline{1,n}$ будет обозначать непосредственно следующие за $N$ узлы.
+
+Для примера подготовки формулы к работе алгоритма рассмотрим следующую: $$F = \forall x\forall y(S(x,y)\leftrightarrow\forall z(I(z,x)\rightarrow I(z,y))).$$
+Устраняем связки $\leftrightarrow$ и $\rightarrow$.
+$$\begin{array}{l}
+F = \forall x\forall y( F_1 \& F_2 )\\
+F_1 = \neg S(x,y)\vee\forall z(\neg I(z,x)\vee I(z,y))\\
+F_2 = \neg\forall z(\neg I(z,x)\vee I(z,y)) \vee S(x,y) = \exists z( I(z,x)\&\neg I(z,y) ) \vee S(x,y)
+\end{array}
+$$
+
+Синтаксическое дерево для $F$:
+\begin{center}
+\Tree[. $\forall x$ [. $\forall y$ [. $\&$ $F_1$ $F_2$ ] ] ]
+\Tree[. \hspace{5mm} ]
+\Tree[. $F_1$ [. $\vee$ $\neg S(x,y)$ [. $\forall z$ [. $\vee$ $\neg I(z,x)$ $I(x,y)$ ] ] ] ]
+\Tree[. $F_2$ [. $\vee$ [. $\exists z$ [. $\&$ $I(z,x)$ $\neg I(z,y)$ ] ] $S(x,y)$ ] ]
+\end{center}
+
+
+Введем еще одно обозначение. Пусть $P,Q\in\{\forall,\exists\}, P\neq Q$, $A$ - некоторый конъюнкт, тогда:
+\begin{displaymath}
+\begin{array}{l}
+%A=A^{\&} = \bigand{n}{i=1}A_i(t_1,\ldots,t_k)\\
+F^Q = \left\lbrace
+		  \begin{array}{l}
+		  F, \text{если } F = Q_X\colon A \;\Phi,\\
+		  Q\colon\varnothing(F), \text{если } F = P_X\colon A \;\Phi,
+		  \end{array}\right.
+
+\end{array}
+\end{displaymath}
+
+\floatname{algorithm}{Алгоритм}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\begin{algorithm}
+\caption{ Преобразования формул языка ИП к виду ПОФ.}
+
+\begin{algorithmic}
+\REQUIRE Корневая вершина $N$ cинтаксического дерева $T$ для $F$.
+\ENSURE $F^{\pi}$ - ПОФ-представление формулы $F$.
+\IF {$N = Qx$}
+  \RETURN  $F^{\pi} = Qx\colon\varnothing ( (G_{N'}^{\pi})^{P} )$   \COMMENT {$P\neq Q$}
+\ENDIF
+\IF {$N=\vee$}
+  \RETURN  $F^{\pi} = \forall\varnothing \bigl( (G_{N'_1}^{\pi})^{\exists},\ldots,(G_{N'_k}^{\pi})^{\exists}\bigr)$
+\ENDIF
+\IF {$N=\&$}
+  \RETURN  $F^{\pi} = \exists\varnothing \bigl( (G_{N'_1}^{\pi})^{\forall},\ldots,(G_{N'_k}^{\pi})^{\forall}\bigr)$ 
+\ENDIF
+\IF[$R$ - некоторый атом] {$N=R$}
+  \RETURN  $F^{\pi} = \exists\varnothing\colon R$
+\ENDIF
+\IF[$R$ - некоторый атом] {$N=\neg R$}
+  \RETURN  $F^{\pi} = \forall\varnothing\colon R$ 
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+Очевидно, что данный алгоритм всегда заканчивает свою работу за конечное число шагов, равное количеству узлов синтаксического дерева для исходной формулы $F$, и выдает корректный результат, ПОФ-представление формулы $F$, так как на каждом шаге алгоритма каждый узел синтаксического дерева преобразуется к виду ПОФ.
+
+Преобразованная формула из предыдущего примера будет выглядеть следующим образом.
+
+\begin{center}
+\begin{tikzpicture}
+\tikzset{grow'=right}
+%\tikzset{execute at begin node=\strut}
+\tikzset{level distance=50pt}
+\tikzset{every tree node/.style={align=left,anchor=west}}
+\Tree [. $\forall x\colon\varnothing$ [. $\exists\varnothing$ [. $\forall y\colon\varnothing$ [. $\exists\varnothing$ 
+[. $\forall\varnothing$ [. $\exists\varnothing$ $\forall\colon S(x,y)$ ] 
+			[. $\exists\varnothing$ [. $\forall z\colon\varnothing$ [. $\exists\varnothing$  $\forall\colon I(z,x)$ ] $\exists\colon I(x,y)$  ] ] ] 
+[. $\forall\varnothing$ [. $\exists z\colon\varnothing$ [. $\forall\varnothing$ $\exists\colon I(z,x)$ ] $\forall\colon I(z,y)$ ] $\exists\colon S(x,y)$ ] ] ] ] ]
+\end{tikzpicture}
+\end{center}
+
+Как видно, при работе алгоритма в получаемой формуле возникает слишком много узлов с фиктивными кванторами $\forall\varnothing$ и $\exists\varnothing$, кроме этого, могут возникнуть излишние ветвления, плохо влияющие на дальнейший поиск вывода. Следующее правило позволяет максимально сократить получаемое дерево.
+
+\textbf{Теорема. (Правило сокращения)}
+
+Если в некоторой ПО-формуле $F$:
+\begin{center}
+\begin{tikzpicture}
+\tikzset{grow'=right}
+%\tikzset{execute at begin node=\strut}
+\tikzset{level distance=60pt}
+\tikzset{every tree node/.style={align=left,anchor=west}}
+\Tree [. $Q_X\colon A$ [. $P_Y\colon B$ [. $Q\colon C$ [. $P_{Z_1}\colon C_1$ $\Phi_1$ ] $\cdots$ [. $P_{Z_k}\colon C_k$ $\Phi_k$ ] ] $\Psi$ ] $\Phi$ ]
+\end{tikzpicture}
+\end{center}
+$P,Q\in\{\forall,\exists\}, P\neq Q$, $C,B$ - некоторые конъюнкты, удовлетворяющие условию $C\subseteq B$, то $F$ эквивалентна $F'$ имеющей следующий вид:
+
+\begin{center}
+\begin{tikzpicture}
+\tikzset{grow'=right}
+%\tikzset{execute at begin node=\strut}
+\tikzset{level distance=80pt}
+\tikzset{every tree node/.style={align=left,anchor=west}}
+\Tree [. $Q_X\colon A$ [. $P_{Y,Z_1}\colon B,C_1$ $\Phi_1\cup\Psi$ ] $\cdots$ [. $P_{Y,Z_k}\colon B,C_k$ $\Phi_k\cup\Psi$ ] $\Phi$ ]
+\end{tikzpicture}
+\end{center}
+
+\textbf{Доказательство.}
+
+Пусть конъюнкт $C$ имеет вид $C^1\&\ldots\& C^n$. Если $C\subseteq B$, то $B = B'\&C^1\&\ldots\& C^n$, где $B'$ некоторый, возможно пустой конъюнкт. Переведем ПО-формулу $F$ в язык исчисления предикатов. В случае, если $F$ начинается с квантора $\forall$:
+$$F = \forall_X A\rightarrow\bigl(\Phi\vee\exists_Y(\Psi\& B\&(\neg C\vee\exists_{Z_1}(C_1\&\Phi_1)\vee\ldots\vee\exists_{Z_k}(C_k\&\Phi_k)))\bigr)$$
+При раскрытии скобок получаем дизъюнкицию конъюнкций, одна из которых: $\Psi\&B\&\neg C = (\Psi\&B'\&C^1\&\ldots\& C^n)\&(\neg C^1\vee\ldots\vee C^n) = \text{\textbf{False}}$, т.е. является несущественной. Поэтому
+$$F = \forall_X A\rightarrow\bigl(\Phi\vee\exists_Y\exists_{Z_1}(B\&C_1\&\Psi\&\Phi_1)\vee\ldots\vee\exists_Y\exists_{Z_k}(B\&C_k\&\Psi\&\Phi_k))\bigr),$$
+что при переводе в ПОФ-представление имеет вид совпадающий с $F'$.
+
+Если $F$ начинается с квантора $\exists$, после перевода в язык исчисления предикатов получаем:
+$$F = \exists_X A\&\Phi\&(\forall_Y B\rightarrow (\Psi\vee C\&\forall_{Z_1}(C_1\rightarrow\Phi_1)\&\ldots\&\forall_{Z_k}(C_k\rightarrow\Phi_k))).$$
+Распишем выражение в скобке:
+$$
+\begin{array}{l}
+\forall_Y B\rightarrow (\Psi\vee C\&\forall_{Z_1}(C_1\rightarrow\Phi_1)\&\ldots\&\forall_{Z_k}(C_k\rightarrow\Phi_k) =\\
+\forall_Y ((\neg B'\vee\neg C^1\vee\ldots\vee\neg C^n\vee\Psi) \vee C^1\&\ldots\& C^n\&\forall_{Z_1}(C_1\rightarrow\Phi_1)\&\ldots\&\forall_{Z_k}(C_k\rightarrow\Phi_k)) =\\
+\forall_Y ((\neg B'\vee\neg C^1\vee\ldots\vee\neg C^n\vee\Psi\vee C^1)\&\ldots\&(\neg B'\vee\neg C^1\vee\ldots\vee\neg C^n\vee\Psi\vee C^n)\&\\
+(\neg B'\vee\neg C^1\vee\ldots\vee\neg C^n\vee\Psi\vee\forall_{Z_1}(C_1\rightarrow\Phi_1) )\&\ldots\&\\
+(\neg B'\vee\neg C^1\vee\ldots\vee\neg C^n\vee\Psi\vee\forall_{Z_k}(C_k\rightarrow\Phi_k) )) = \\
+\forall_Y (\text{\textbf{True}}\&\ldots\&\text{\textbf{True}}\&(\neg B\vee\Psi\vee\forall_{Z_1}(C_1\rightarrow\Phi_1) )\&\ldots\&(\neg B\vee\Psi\vee\forall_{Z_k}(C_k\rightarrow\Phi_k) )) = \\
+\forall_Y\forall_{Z_1}(\neg(B\& C_1)\vee\Psi\vee\Phi_1)\&\ldots\&\forall_Y\forall_{Z_k}(\neg(B\& C_k)\vee\Psi\vee\Phi_k)
+\end{array}
+$$
+Т.е. $$F = \exists_X A\&\Phi\&\forall_Y\forall_{Z_1}((B\& C_1)\rightarrow(\Psi\vee\Phi_1))\&\ldots\&\forall_Y\forall_{Z_k}((B\& C_k)\rightarrow(\Psi\vee\Phi_k)),$$
+что при переводе в ПОФ-представление имеет вид совпадающий с $F'$.
+
+Доказательство завершено.
+
+Квантор $Q\colon C$, в формуле $F$ из правила сокращения, называется тривиальным квантором. Если в формуле $F$ из правила сокращения, корневым узлом является квантор $P_Y B$, то необходимо приветсти дерево к соответствующему виду, добавив новый корень, фиктивный квантор $Q\varnothing$. Правило сокращения следует применять к парам узлов, начиная от листьев дерева, и на ``прямых'' участках внутри дерева, которые не ведут к ветвлению. Применение правила приводящее к ветвлению следует избегать, если только получаемое дерево не будет состоять из меньшего количества узлов. Например, сокращение формулы из рассматриваемого выше примера приводит к следующему:
+\begin{center}
+\begin{tikzpicture}
+\tikzset{grow'=right}
+%\tikzset{execute at begin node=\strut}
+%\tikzset{level distance=70pt}
+\tikzset{level 1/.style={level distance=60pt}}
+\tikzset{level 2/.style={level distance=40pt}}
+\tikzset{level 3+/.style={level distance=110pt}}
+\tikzset{every tree node/.style={align=left,anchor=west}}
+\Tree [. $\forall x,y\colon\varnothing$ [. $\exists\varnothing$ [. $\forall z\colon S(x,y),I(z,x)$ $\exists\colon I(x,y)$ ] [. $\forall\varnothing$ [. $\exists z\colon I(z,x)$ $\forall\colon I(x,y)$ ] $\exists\colon S(x,y)$ ] ] ]
+\end{tikzpicture}
+\end{center}
+В таком случае возможны два варианта, сократить либо квантор $\exists\varnothing$, либо $\forall\varnothing$, последнее ведет к большему количеству узлов дерева, т.к. ветку $\forall z\colon S(x,y),I(z,x) - \exists\colon I(x,y)$ придется скопировать при ветвлении. Окончательно, дерево выглядит следующим образом:
+
+\begin{center}
+\begin{tikzpicture}
+\tikzset{grow'=right}
+%\tikzset{execute at begin node=\strut}
+%\tikzset{level distance=70pt}
+\tikzset{level 1/.style={level distance=30pt}}
+\tikzset{level 2/.style={level distance=130pt}}
+\tikzset{level 3+/.style={level distance=160pt}}
+\tikzset{every tree node/.style={align=left,anchor=west}}
+\Tree [. $\exists\varnothing$ [. $\forall x,y,z\colon S(x,y),I(z,x)$ $\exists\colon I(x,y)$ ] [. $\forall x,y\colon\varnothing$ [. $\exists z\colon I(z,x)$ $\forall\colon I(x,y)$ ] $\exists\colon S(x,y)$ ] ]
+\end{tikzpicture}
+\end{center}
+
+\section{Conclusion}
+A new efficient algorithm for conversion of the predicate calculus language formulas to the language of PCFs and equivalent rules of reducing PCFs, preserving the original heuristic structure of knowledge represented by the formulas of the predicate calculus language are presented. В планах реализация данного алгоритма для использования в прувере, тестирования на задачах из библиотеки TPTP \cite{tptp}, кроме этого, необходимо рассмотреть вопросы преобразования формул языка дизъюнктов в язык ПОФ, т.к. в библиотеке TPTP большая часть задач представлена в виде множеств дизъюнктов, задачи приведены к скулемовской стандартной форме и восстановить первоначальную формализацию таких задач проблематично. Для перевода задач представленных в виде КНФ, в которых отсутствуют переменные связанные кванторами существования, можно предложить упрощенный алгоритм. 
+
+\begin{thebibliography}{9}
+\bibitem{SNV1990} S.N.~Vassilyev \emph{Machine Synthesis of Mathematical Theorems}. The Journal of Logic programming, V.9, No.2--3, pp. 235--266,1990.
+\bibitem{ICDS2000} S.N.~Vassilyev, A.K.~Zherlov, E.A.~Fedunov, B.E.~Fedosov \emph{Intelligent Control of Dynamic Systems}. Moscow, Russia: Fizmatlit, 2000. (in Russian)
+\bibitem{jour2} A.V.~Davydov, A.A.~Larionov, E.A.~Cherkashin \emph{On the calculus of positively constructed formulas for automated theorem proving}. Automatic Control and Computer Sciences (AC\&CS), V.45, No.7, pp. 402--407, 2011.
+\bibitem{mipro2013} E.A.~Cherkashin, A.A.~Larionov, A.V.~Davydov \emph{Calculus of Positively Constructed Formulas, its Features, Strategies and Implementation} // MIPRO 2013/CIS (36-th international convention on information and communication technology, electronics and microelectronics), 20-24 May 2013, Chroatia, Opatija, 2013. - pp. 1289--1295.
+\bibitem{Bourbaki} N.~Bourbaki \emph{Theory of Sets}. Paris: Hermann, 1968.
+\bibitem{tptp} G.~Sutcliffe \emph{The TPTP Problem Library and Associated Infrastructure. The FOF and CNF Parts, v3.5.0} // Journal of Automated Reasoning. V43, N4, pp.337--362.
+\end{thebibliography}
+
+\end{document}
