@@ -155,22 +155,22 @@ The tree--like form of the latter is as follows:
 \end{tikzpicture}
 \end{center}
 
-\section{Transformation algorithm}
+\section{The transformation algorithm}
 
-Этот параграф посвящен изложению основного результата работы - алгоритма преобразования формул языка ИП в язык ПОФ.
+% Этот параграф посвящен изложению основного результата работы - алгоритма преобразования формул языка ИП в язык ПОФ.
 
-Перед тем как алгоритм начинает свою работу, в формуле поступающей на вход необходимо:
+The algorithm's input is a FOF.  At the first stage, the algorithm performs some general transformations:
 \begin{itemize}
-\item удалить все связки $\leftrightarrow$ и $\rightarrow$ по известным эквивалентностям $F_1\leftrightarrow F_2 = (F_1\rightarrow F_2)\&(F_2\rightarrow F_1)$ и $F_1\rightarrow F_2 = \neg F_1 \vee F_2$;
-\item применить законы ДеМоргана $\neg (F_1\&\ldots\& F_n)=\neg F_1\vee\ldots\vee\neg F_n$, $\neg (F_1\vee\ldots\vee F_n)=\neg F_1\&\ldots\&\neg F_n$, $\neg\forall x F = \exists x \neg F$, $\neg\exists x F = \forall x \neg F$  и снятия двойного отрицания $\neg\neg F = F$ для переменщения символов $\neg$ непосредственно к атомам.
+\item elimination of $\leftrightarrow$ and $\rightarrow$ logical connections according to well known equivalent transformations $F_1\leftrightarrow F_2 = (F_1\rightarrow F_2)\&(F_2\rightarrow F_1)$ and $F_1\rightarrow F_2 = \neg F_1 \vee F_2$;
+\item application of DeMorgan laws $\neg (F_1\&\ldots\& F_n)=\neg F_1\vee\ldots\vee\neg F_n$, $\neg (F_1\vee\ldots\vee F_n)=\neg F_1\&\ldots\&\neg F_n$, $\neg\forall x F = \exists x \neg F$, $\neg\exists x F = \forall x \neg F$ and elimination of consequent negations $\neg\neg F = F$; these transformations shift connections $\neg$ to leaves of the FOF (atoms).
 \end{itemize}
-Следует заметить, что подобные замены разрушают исходную структуру знания, предсталяемую формулой исчисления предикатов, однако, правила сокращения, представленные ниже, дают гарантию того, что представление в виде ПОФ, будет наиболее точно соответствовать исходной формуле. Устранение связок  $\leftrightarrow$ и $\rightarrow$ позволяет наиболее просто определить алгоритм преобразования на основе синтаксических деревьев, определяемых для формул исчисления предикатов следующим образом.
+The above mentioned transformations will break the original heuristic structures, which was given in the FOF, however, reduction rules described below will reconstruct some of the heuristics to make resulting PCF look similar to the original FOF.  Elimination of the connections $\leftrightarrow$ and $\rightarrow$ allows us to define the conversion algorithm laconically as a tree--like FOF syntactic representation transformations.
 
-Пусть $F$ - преобразованная по приведенным выше правилам формула исчисления предикатов. Синтаксическим деревом формулы $F$ называется дерево, корнем которого является:
+Let $F$ be a FOF processed according above mentioned transformations.  A \emph{syntactic tree} of a FOF $F$ is a tree whose root is either
 \begin{enumerate}
-\item Сама формула $F$, если $F$ является атомом или отрицанием атома.
-\item Квантор $\forall x$ или $\exists x$, если $F$ имеет вид $\forall x G$ или $\exists x G$ соответственно, при этом, поддеревом этого узла является  синтаксическое дерево для подформулы $G$.
-\item Логическая связка $\circ$, если $F$ имеет вид $G_1\circ\ldots\circ G_n$, где $\circ$ - одна из связок $\&,\vee$, при этом поддеревьями этого узла являются синаксические деревья формул $G_i, \forall i=\overline{1,n}$ соответственно. Связка $\&$ в формуле, как обычно, имеет больший приоритет чем $\vee$, если подформулы не выделены скобками, например в формуле $\neg A \& B \vee C$, две подформулы $G_1 = \neg A\& B$ и $G_2 = C$.
+\item the formula $F$ itself, if $F$ a literal (an atom or an atom negation).
+\item a quantifier $\forall x$ or $\exists x$, if $F$ is of a form $\forall x G$ or $\exists x G$ correspondingly; syntactic tree of $G$ is the only subtree of syntactic tree of $F$.
+\item a logical connection $\circ$, if $F$ is of a form $G_1\circ\ldots\circ G_n$, where $\circ$ is connection $\&$ or $\vee$, all subtrees of this node are syntactic trees of FOF's $G_i, \forall i=\overline{1,n}$ correspondingly.  The connection $\&$ in a FOF as usual has higher priority than $\vee$, the brackets are used to adjust the priorities (as usual); e.g., if a FOF $\neg A \& B \vee C$, there are two subformulas $G_1 = \neg A\& B$ и $G_2 = C$.
 \end{enumerate}
 Таким образом построенное дерево листами имеет атомы или отрицания атомов. Для каждого узла $N$ дерева $T$, $G_N$ будет обозначать подформулу формулы $F$, соответствующую поддереву $T'$ с корнем в узле $N$. $N'_i,\forall i=\overline{1,n}$ будет обозначать непосредственно следующие за $N$ узлы.
 
@@ -210,6 +210,9 @@ F^Q = \left\lbrace
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \begin{algorithm}
 \caption{ Преобразования формул языка ИП к виду ПОФ.}
+
+The rules of transformation are as follows:
+
 
 \begin{algorithmic}
 \REQUIRE Корневая вершина $N$ cинтаксического дерева $T$ для $F$.
