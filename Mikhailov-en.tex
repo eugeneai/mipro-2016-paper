@@ -383,7 +383,7 @@
 % use a multiple column layout for up to three different
 % affiliations
 \author{\IEEEauthorblockN{Andrey Mikhailov${}^{*}$, Aleksey Hmelnov${}^{*}$, Evgeny Cherkashin${}^{*\;**}$ and Igor Bychkov${}^{*}$}
-\IEEEauthorblockA{${}^{*}$Institute of System Dynamics and Control Theory at Siberian Branch of Russian Academy of Sciences, \\
+\IEEEauthorblockA{${}^{*}$Matrosov Institute for System Dynamics and Control Theory of Siberian Branch of Russian Academy of Sciences, \\
 ${}^{**}$National Research Irkutsk State Technical University,\\
 Irkutsk, Russian Federation\\
 \texttt{\{mikhailov,alex,eugeneai,bychkov\}@icc.ru}}
@@ -425,7 +425,7 @@ Irkutsk, Russian Federation\\
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-Engineering of the compiled software is an important task in software engineering.  One of the stages of the engineering technologies is a construction and analysis of a control flow graphs, which reflect general structures of algorithms.  The paper presents a technique for analyzing and visualizing the control flow graph of a compiled software.  The analysis is based on semantically equivalent transformations of the original graph resulting in an abstract node that contains a hierarchy of isolated regions, which then associated with predefined templates resulting a graphical representation.  The templates and additional signature data allow one to recognize the high-level programming structures and user statements to construct a flow-chart notation of the original program.
+Engineering of the compiled software is an important task in software engineering.  One of the stages of the engineering technologies is a construction and analysis of a control flow graphs, which reflect a general structure of algorithms.  The paper presents a technique for analyzing and visualizing the control flow graph of a compiled software.  The analysis is based on semantically equivalent transformations of the original graph resulting in an abstract node that contains a hierarchy of isolated regions, which then associated with predefined templates resulting a graphical representation.  The templates and additional signature data allow one to recognize the high-level programming structures and user statements to construct a flow-chart notation of the original program.
 
 %%%% It is important stages in reverse engineering.
 \end{abstract}
@@ -444,23 +444,23 @@ Engineering of the compiled software is an important task in software engineerin
 
 \section{Introduction}
 
-Reverse engineering of compiled software (programs after processing its source code by a compiler) is an important task in software engineering as it allows one to solve a wide variety of software quality assessment problems, such as productivity of compiled code, quality of compiler and system libraries, peculiarities of hardware architectures the program running on.  Reverse engineering is also used for regain the access to legacy code, whose source counterpart is already lost, and for investigation of virus and malicious program behavior.  One of the helpful stages of reverse engineering techniques is a construction and analysis of so-called control flow graph that reflect a general structure of corresponding algorithms.  Artificial intelligence techniques such as pattern recognition and rewrite rule engines have extensive use in the analysis.
+Reverse engineering of compiled software (programs after processing its source code by a compiler) is an important task in software engineering as it allows one to solve a wide variety of software quality assessment problems, such as productivity of compiled code, quality of compiler and system libraries, peculiarities of hardware architectures the program running on.  Reverse engineering is also used for regain the access to legacy code, whose source counterpart is already lost, and for investigation of virus and malicious program behavior.  One of the helpful stages of reverse engineering techniques is a construction and analysis of so-called control flow graph that reflects a general structure of corresponding algorithms.  Artificial intelligence techniques such as pattern recognition and rewrite rule engines have extensive use in the analysis.
 
-The control flow graph is a natural representation that can be automatically figured out from the source code or its compiled binaries.  The graph is used by compiler as an intermediate structure for optimizing transformations.  The source code text contains all the necessary information on program behavior.  Its analysis usually is a complex task even with technological support of nowadays integrated development environments, which make the analysis significantly easier.
+The control flow graph is a natural representation that can be automatically figured out from the source code or its compiled binaries.  The graph is used by compiler as an intermediate structure for optimizing transformations.  The source code text contains all the necessary information of program behavior.  Its analysis usually is a complex task even with technological support of nowadays integrated development environments, which make the analysis significantly easier.
 
-Binary code analysis is a more complex task, and it requires a complex IT knowledge.  Special software such as disassemblers and decompilers are used to partially automatize control flow analysis and visualization.  The decompiling a binary runtime is in principle an impracticable task: the reconstructed high-level code is more difficult in understanding as compared to its assembler representation.  The visual analysis of the control flow graph is an alternate way.  There are a number of visual representation and processing software, which are relatively universal, such as uDraw (daVinci)~\cite{10}, VCG~\cite{14}, Graphlet~\cite{12}, GraVis~\cite{13}, Graph Drawing Server~\cite{9}, graphViz~\cite{11}, VisualGraph~\cite{15}.  These systems have a rich general toolkit, but visualization and analysis of control flow graph requires a special processing routines. Algorithms of graph visualization are developed since 60th~\cite{7}.  The results of P.~Eades~\cite{5}, T.~Kamada~\cite{q1}, and S.~Kawai~\cite{6} considered to be classical in this research field, they deal with universal approaches to graph visualization problems.
+Binary code analysis is a more complex task, and it requires a complex IT knowledge.  Special software such as disassemblers and decompilers are used to partially automatize control flow analysis and visualization.  The decompiling a binary runtime is in principle an impracticable task: the reconstructed high-level code is more difficult in understanding as compared to its assembler representation.  The visual analysis of the control flow graph is an alternate way.  There are a number of visual representation and processing software, which are relatively universal, such as uDraw (daVinci)~\cite{10}, VCG~\cite{14}, Graphlet~\cite{12}, GraVis~\cite{13}, Graph Drawing Server~\cite{9}, graphViz~\cite{11}, VisualGraph~\cite{15}.  These systems have a rich general toolkit but visualization and analysis of control flow graph requires a special processing routines. Algorithms of graph visualization are developed since 60th~\cite{7}.  The results of P.~Eades~\cite{5}, T.~Kamada and S.~Kawai~\cite{q1} considered to be classical in this research field, they deal with universal approaches to graph visualization problems.
 
-The control flow graph is directed and usually visualized by means of layers~\cite{4}.  The process in general consists of four stages:
+The control flow graph is directed and usually visualized by means of layers~\cite{4}.  The process consists of four stages:
 \begin{itemize}
-\item [] \textbf{Distribution of graph nodes between layers.} Each node is assigned a rank.  All directed edges can connect nodes from a lower rank to a higher one.  Obviously, nodes of the same rank cannot be connected with edges.  Rank distribution of the nodes is performed with various techniques, the simplest one is based on path length calculation in depth-first graph traversal procedure.
+\item [] \textbf{Distribution of graph nodes between layers.} Each node is assigned a rank.  All directed edges can connect nodes from a lower rank to a higher one.  Obviously, nodes of the same rank cannot be connected.  Rank distribution of the nodes is performed with various techniques, the simplest one is based on path length calculation in depth-first graph traversal procedure.
 \item []\textbf{Defining order on the nodes in a layer.} The nodes of a layer are ordered according to principle of minimization of intersections of edges.  Method of median~\cite{8} is most widely used as a technique for solving the problem.
 \item []\textbf{Figuring out of the node coordinates in a layer.} Each node of each layer is assigned a coordinate so as the graph will correspond to predefined aesthetic criteria.
 \item []\textbf{Edge drawing.} On this stage the edges are drawn according to rules of visualization, for example, edges can be indirect lines.
 \end{itemize}
 
-The paper describes a technique and software tools for analyzing and visualizing the control flow graph of a compiled binaries.  The analysis is based on semantically equivalent transformations of the original graph resulting in a singular abstract node that contains a hierarchy of isolated regions (subgraphs).  The regions are associated with predefined templates to form resulting graphical representation.  The templates and additional signature data for library modules allow one to recognize among the regions the high-level programming language structures and statements, e.g., to construct flow-chart notation of the original program.
+The paper describes a technique and software tools for analyzing and visualizing the control flow graph of a compiled binaries.  The analysis is based on semantically equivalent transformations of the original graph resulting in a singular abstract node that contains a hierarchy of isolated regions (subgraphs).  The regions are associated with predefined templates to form resulting graphical representation.  The templates and additional signature data for library modules allow one to recognize the regions as high-level programming language structures and statements to construct, e.g., flow-chart notation of the original program.\enlargethispage{-2.5em}
 
-\section{A theoretical basis of control flow\\ graph visualization}
+\section{Theoretical basis of control flow\\ graph visualization}
 
 An directed graph $G(V,E)$ is a \emph{control flow graph} if the following restrictions hold:
 \begin{enumerate}
@@ -478,17 +478,17 @@ Let $a$ and $b$ be a pair of distinct edges in a control flow graph.  The ordere
 
 The first condition ensures that every path from $start$ (of the whole graph) into the region passes through the entry edge $a$.  The second condition ensures that every path from inside the region to $end$ passes through the exit edge $b$.  The third condition implements two constraints: every path from inside the region to $a$ point ‘above’ $a$ passes through the exit $b$, and every path from a point ‘below’ $b$ to a point inside the region passes through the entrance $a$, i.e., these path go around the SESE region.
 
-Two SESE regions in a control flow graph must be either folded in each other or do not overlap (contain no common nodes) \cite{sese}.  Structural analysis on the base of recognition of SESE regions commonly used for efficient construction of an intermediate image in a so called \emph{static single assignment} (SSA) form, as well as in data flow analysis.  SESE regions are also organized in \emph{program structure trees} (PST), which represent the control flow graph as hierarchy of folded regions (SESE regions and individual nodes folding tree).  Each of the PST tree nodes denote a procedure consisting of other procedures and individual operators.
+Two SESE regions in a control flow graph must be either folded or do not overlap (contain no common nodes) \cite{sese}.  Structural analysis on the base of recognition of SESE regions commonly used for efficient construction of an intermediate image in a so called \emph{static single assignment} (SSA) form, as well as in data flow analysis.  SESE regions are also organized in \emph{program structure trees} (PST), which represent the control flow graph as hierarchy of folded regions (SESE regions and individual nodes folding tree).  Each of the PST tree nodes denote a procedure consisting of other procedures and individual operators.
 
 A control flow graph subgraph having one entry and one exit nodes is referred to as \emph{two terminal region} (TT region).  TT regions emphasize the points of control flow convergence and the following divergence (Fig.~\ref{fig:TTRegion}).  The requirement condition of TT region recognition are weaker as compared to SESE regions, so all the SESE regions are TT regions but not vice versa.
 \begin{figure}[tb]
 	\centering
-		\includegraphics[width=0.4\textwidth]{Pic/TTRegion.eps}
+		\includegraphics[width=0.4\linewidth]{Pic/TTRegion.eps}
 	\caption{A two terminal region}
 	\label{fig:TTRegion}
 \end{figure}
 
-For the structural programming language, TT region corresponds to a branching operator or a cycle.  Our approach to the control flow graph visualization is based on recognition of TT regions and classification them into finite set of variants concerned with various control flow operators of the original high-level programming language.  TT regions of program's graph of control flow replaced with abstract nodes (folded), giving analysis basis for visualization.
+For the structural programming language, TT region corresponds to a branching operator or a cycle.  Our approach to the control flow graph visualization is based on recognition of TT regions and classification them into finite set of variants concerned with various control flow operators of the original high-level programming language.  TT regions of program graph of control flow replaced with abstract nodes (folded) form an analysis basis of visualization.
 
 \subsection{Quality criteria of the control flow graph visualization}
 \label{sec:qcrit}
@@ -505,16 +505,16 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 The main quality criterion of a control graph visualization is the correspondence of the constructed image to the nature of the visualized informational object.  The quality assessment depends on various structural and semantic characteristics of the object.  Three basic feature sets are emphasized specially among the criteria: \emph{visual arrangement}, \emph{aesthetics}, \emph{restrictions}.
 \begin{itemize}
 \item []\textbf{Visual arrangement} is the main set of rules that a graph representation must obey to be acceptable as a desired result.  For example, to visualize programs as a flowchart, layout engine must obey agreement rules, which represent all the graph nodes as flowchart symbols and the edges as polylines consisting only with vertical and horizontal sections.  In a general case, an visual arrangement can be sufficiently complex and include a lot of details related to the target representation.
-\item []\textbf{Aesthetics} is a subset of the criteria that defines attributes of the constructed image, which must be complied as much as possible to improve visibility.  A widely used aesthetic criteria are the following: minimizing a number of edge intersections, minimizing a number of foldings, minimizing the occupation area, maximizing the resolution, minimizing the total edge length, unification of edge lengths, minimizing the number of folds on an edge, foldings unification, maximizing a symmetry of graph representation, etc. % минимизация коэффициента сторон.
-\item []\textbf{Restrictions} are a subset of the criteria that define layout rules for peculiar elements and subgraphs of the constructed image.  The most common used criteria are \emph{the center} that define whether the root node must be placed at the center of the image, \emph{externality} that define the necessity to place a node outside a region, \emph{cluster} defines that a number of nodes should be placed together near to each other, \emph{sequence} defines the order of nodes placement during drawing paths (left to right, top-bottom).
+\item []\textbf{Aesthetics} is a subset of the criteria that defines attributes of the constructed image, which must be obeyed as much as possible to improve visibility.  A widely used aesthetic criteria are the following: minimizing a number of edge intersections, minimizing a number of foldings, minimizing the occupation area, maximizing the resolution, minimizing the total edge length, unification of edge lengths, minimizing the number of foldings on an edge, foldings unification, maximizing a symmetry of graph representation, etc. % минимизация коэффициента сторон.
+\item []\textbf{Restrictions} are a subset of the criteria that define layout rules for peculiar elements and subgraphs of the constructed image.  The most common used criteria are \emph{the center} that define whether the root node must be placed at the center of the image, \emph{externality} that define the necessity to place a node outside a region, \emph{cluster} defines that a number of nodes to be placed together near to each other, \emph{sequence} defines the order of nodes placement during drawing paths (left to right, top-bottom).
 \end{itemize}
 
-A control flow graph that was reconstructed from a binaries consists of operator block nodes, starting node, and an non-empty set of finish nodes, as well as edges correspond to the transfer of control.  A natural image of the control flow graph is a flowchart diagram.  For the flow charts we define the following visual arrangement for its nodes (Fig.~\ref{fig:blocks}):
+A control flow graph reconstructed from a binaries consists of operator block nodes, starting node, and an non-empty set of finish nodes, as well as edges correspond to the transfer of control.  A natural image of the control flow graph is a flowchart diagram.  For the flow charts we define the following visual arrangement for its nodes (Fig.~\ref{fig:blocks}):
 \begin{itemize}
 \item []\textbf{Operator shape} represents a node where the control flow passed only one direction.
 \item []\textbf{Decision shape} corresponds to conditional operators in high-level programming languages; in a control flow graph it is a node, where flow control splits up.
 \item []\textbf{Cycle edge shapes} denote two graph nodes, one is for beginning of the cycle and one for its end, the cycle body is located between these shapes.
-\item []\textbf{Starting and terminal shapes} mark the entrance and the exit from the function or program.
+\item []\textbf{Starting and terminal shapes} mark the entrance and the exit from a function or a program.
 \end{itemize}
 
 \begin{figure}[b]
@@ -539,10 +539,10 @@ A control flow graph that was reconstructed from a binaries consists of operator
 
 In this paper, we consider a layout algorithm that visualizes control flow according to criteria defined for flowcharts.
 
-\section{Control flow graph visualizing}
+\section{Control flow graph visualization}
 \label{sec:cfg-vis}
 
-Nowadays programming languages in most cases contain a standard set of high-level control flow operators (\texttt{if-then}, \texttt{if-then-else}, \texttt{for}, \texttt{while}, etc.).  These operators during compilation produce their specific subgraphs.  For example, \texttt{if-then} operator produces a graph depicted in Fig.~\ref{fig:IfSt}, where \texttt{then} part could correspond to another control subgraph.
+Nowadays programming languages in most cases contain a standard set of high-level control flow operators (\texttt{if-then}, \texttt{if-then-else}, \texttt{for}, \texttt{while}, etc.).  These operators produce their specific subgraphs during compilation.  For example, \texttt{if-then} operator produces a graph depicted in Fig.~\ref{fig:IfSt}, where \texttt{then} part could correspond to another control subgraph.
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=0.11\textwidth]{Pic/Pic2.eps}
@@ -550,18 +550,18 @@ Nowadays programming languages in most cases contain a standard set of high-leve
 	\label{fig:IfSt}
 \end{figure}
 
-One can describe a corresponding subgraphs for all flow control operators of all standard high-level languages.  Each generated subgraph is described as a template.  The control operators are revealed and reconstructed in whole flow control graph by means of recognition of the templates in the graph and folding the recognized structure into an abstract node.  The edges terminating at and originating from the abstract node are reconnected accordingly.  The reconstruction process is repeated until either the graph folds into one abstract node, and in this case graph is referred to as \emph{reducible}, or there is a subgraph that does not correspond to any of the templates.  In the last case the graph is called \emph{inreducible}, and the subgraph that was not recognized is named \emph{undeterminate}.
+One can describe a corresponding subgraphs for all flow control operators of all standard high-level languages.  Each generated subgraph is described as a template.  The control operators are revealed and reconstructed in whole flow control graph by means of recognition of the templates in the graph and folding the recognized structure into an abstract node.  The edges terminating at and originating from the abstract node are reconnected accordingly.  The reconstruction process is repeated until either the graph folds into one abstract node, and in this case the graph is referred to as \emph{reducible}, or there is a subgraph that does not correspond to any of the templates.  In the last case the graph is called \emph{inreducible}, and the subgraph that was not recognized is named \emph{undeterminate}.
 
-Structural high-level programming language compilers produce only reducible flow control graphs.  This will hold for most of other languages as long as \texttt{goto} operator is not used explicitly or implicitly.  There are two approaches for overcoming this problem:
+Structural high-level programming language compilers produce only reducible flow control graphs.  This will hold for most of other languages as long as \texttt{goto} operator is not used explicitly or implicitly.  There are two approaches for overcoming the problem of folding impossibility:
 \begin{enumerate}
-\item Perform an undeterminate subgraph riddance operation.  The essential disadvantage of the approach is the necessity of addition and deletion of nodes and edges in the graph, this is not allowed in control flow graph model visualization.
+\item Perform riddance operation over undeterminate subgraphs.  The essential disadvantage of the approach is the necessity of addition and deletion of nodes and edges in the graph, this is not allowed in control flow graph model visualization.
 \item Recognize the undeterminate subgraph and replace it with an abstract node.
 \end{enumerate}
 
 \subsection{Algorithm of control flow graph structuring}
 \label{sec:algor-contr-flow}
 
-The developed algorithm is based on structural analysis technique proposed in~\cite{17} that suggests recognizing subgraph of a predefined form (a template) and replacing them with an abstract node, then edge endpoints reassignation is performed accordingly.  Template application is carried out according to depth-first order until the graph folds into one abstract node.  A tree of dominators is constructed.  The tree is used for edge classification and cycle recognition.  The result quality strongly depends on template application order.  The algorithm is as follows:
+The developed algorithm is based on structural analysis technique proposed in~\cite{17} that suggests recognizing subgraph of a predefined form with templates and replacing them with an abstract node, then edge endpoints reassignation is performed accordingly.  Template application is carried out according to depth-first order until the graph folds into one abstract node.  A tree of dominators is constructed.  The tree is used for edge classification and cycle recognition.  The result quality strongly depends on template application order.  The algorithm is as follows:
 
 \begin{algorithm}[h]
 \caption{Algorithm of control flow graph structuring}
@@ -590,7 +590,7 @@ The developed algorithm is based on structural analysis technique proposed in~\c
 % Построим дерево доминиаторов $D$ и постдоминаторов $P$ для графа $G(E,V)$.
 % In order to construct a tree of dominator $D$ and postdominator $P$.
 
-If a program has no predefined terminating nodes, the nodes is figured out by means of the following procedure.  Firstly, the edges are categorized as \emph{forward}, \emph{backward}, and \emph{cross} directed.  Among nodes connected with forward edges, there will be at least one that has no originating edge.  If we found the only node, then the node is termination one.  Otherwise all such nodes are connected with edges to an additional fictitious termination node.  The obtained graph is correct as the termination node is accessed from any node of the graph.
+If a program has no predefined terminating nodes, the nodes is figured out by means of the following procedure.  Firstly, the edges are categorized as \emph{forward}, \emph{backward}, and \emph{cross} directed.  Among nodes connected with forward edges, there will be at least one that has no source edge.  If we found the only node, then the node is the termination.  Otherwise all such nodes are connected with edges to an additional fictitious termination node.  The obtained graph is correct as the termination node is accessed from any node of the graph.
 
 Traversing of the dominator tree is done in a reverse breadth-first order, i.e. from leaves to the root, placing graph nodes in a \texttt{stack} structure.  A region having the deepest folding level (TT region) is determined on each iteration of the algorithm according to the rule $p$~$pidom$~$v$: the postdominator of node $v$ of $S$ is the terminal node, where the control flow passing $v$ converges.  This node is not added to the recognized region as it could be terminal node of other region of the graph.
 
@@ -632,9 +632,9 @@ where \texttt{wDist} is a vertical distance between nodes, \texttt{hDist} is a h
 \section{Implementation}
 \label{sec:implementation}
 
-The algorithm is implemented in the Java programming language.  The main application is named ``VisualGraph'' and implemented using authors' library ``JGraphX'' containing the subroutines of the algorithm.  The application uses hierarchical graph models for the control flow visualization using authors' and other known popular visualization algorithms.  The ``JGraphX'' library allows one to make images of control flow graphs, defining shapes and colors for nodes, draw edges between nodes and corner points automatically and manually.
+The algorithm is implemented in the Java programming language.  The main application is named ``VisualGraph'' and implemented using authors' library ``JGraphX'' containing the subroutines of the algorithm.  The application uses hierarchical graph models for the control flow visualization using authors' and other known popular visualization algorithms.  The ``JGraphX'' library allows one to make images of control flow graphs by defining shapes and colors for nodes, drawing edges between nodes and corner points automatically and manually.
 
-At present the library and application support some visual arrangement criteria from section \ref{sec:qcrit}.  Categorization of nodes in branching regions of the control flow graph requires that the graph will be attributive and contain assembler code of the main program blocks (lineal parts of code).  The control flow graph itself is obtained from assembler program semantics analysis by means of authors FlexT based utilities \cite{flext}.
+At present the library and application support some visual arrangement criteria from section \ref{sec:qcrit}.  Categorization of nodes in branching regions of the control flow graph requires that the graph will be attributive and contain assembler code of the main program blocks (lineal parts of code).  The control flow graph itself is obtained from assembler program semantics analysis by means of authors' FlexT based utilities \cite{flext}.
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
@@ -733,7 +733,7 @@ At present the library and application support some visual arrangement criteria 
 
 \section{A layout example}
 
-Let's consider a result of our algorithm in comparison to one of hierarchic layout engines (Fig.~\ref{fig:image1}).  In the figure, our algorithm (\emph{a}) specially emphasizes the backward edge that corresponds to a loop.  The edge style is visually distinguishable from other edges.  The algorithm also marks the terminal nodes.  Such visualization features allow to recognize visually the regions of interest and other kinds of analysis.  In Fig.~\ref{fig:image1}\emph{а}, the edges are represented with straight plain lines (except edge connecting \texttt{v9} and \texttt{v5}).  This will ease of control transferring analysis as compared to the form in Fig.~\ref{fig:image1}\emph{б}. Note, that the proposed algorithm accounts not all the variants of control flow patterns and can be improved for example to support undetermined edges removal in a region.
+Let's consider a result of our algorithm in comparison to one of hierarchic layout engines (Fig.~\ref{fig:image1}).  In the figure, our algorithm (\emph{b}) specially emphasizes the backward edge that corresponds to a loop.  The edge style is visually distinguishable from other edges.  The algorithm also marks the terminal nodes.  Such visualization features allow to recognize visually the regions of interest and other kinds of analysis.  In Fig.~\ref{fig:image1}\emph{a}, the edges are represented with straight plain lines (except edge connecting \texttt{v9} and \texttt{v5}).  This will ease of control transferring analysis as compared to the form in Fig.~\ref{fig:image1}\emph{б}. Note, that the proposed algorithm accounts not all the variants of control flow patterns and can be improved for example to support undetermined edges removal in a region.
 
 %  а) иерархический, б) структурный
 % fig
@@ -751,7 +751,7 @@ Let's consider a result of our algorithm in comparison to one of hierarchic layo
 
 
 \section{Conclusion}
-We have proposed and implemented a software tools realizing an approach to surface graph layout on the base of techniques of structural analysis.  The main difference of our approach as compared to the mentioned (in the paper) techniques is the usage of a set of matching rules, which are applied to two two terminal nodes (a special subgraph) to recognize original control flow structures of high-level programming language.
+We have proposed and implemented a software tools realizing an approach to surface graph layout on the base of techniques of structural analysis.  The main difference of our approach as compared to the mentioned (in the paper) techniques is the usage of a set of matching rules, which are applied to the terminal nodes (a special subgraph) to recognize original control flow structures of high-level programming language.
 
 A probation of the developed algorithms was performed on CPU2000 test set\footnote{https://www.spec.org/cpu2000/ --- Standard Performance Evaluation Corporation.  SPEC CPU2000 is a test set for assessment of the performance of a central processing unit. The test are used for compiler quality evaluation.}.  The following results are obtained:
 \begin{itemize}
@@ -816,7 +816,7 @@ The development partially support by Russian Foundation of Fundamental Research,
 
 \bibitem{5} P.~A.~Eades, \emph{A Heuristic for Graph Drawing}, Congressus Numerantium, 1984, 42,  P.~149--160.
 
-\bibitem{6} T.~Kamada, S.~Kawai, \emph{An Algorithm for Drawing General Undirected Graphs}, Inform. Process. Lett, 1989, 31, P.~7--15.
+\bibitem{q1} T.~Kamada, S.~Kawai, \emph{An Algorithm for Drawing General Undirected Graphs}, Inform. Process. Lett, 1989, 31, P.~7--15.
 
 \bibitem{4} P.~Eades, L.~Xuemin, \emph{How to Draw a Directed Graph}, Visual Languages, 1989, IEEE Workshop on, IEEE, 1989, P.~13--17.
 
