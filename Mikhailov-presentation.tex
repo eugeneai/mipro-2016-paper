@@ -7,27 +7,28 @@
 \usepackage{courier}
 \usepackage{tikz}
 \usepackage{float}
-\usepackage{graphicx} 
+\usepackage{graphicx}
 \usepackage{epstopdf}
 
 \usepackage{algorithm2e}
- 
+
  % Перевод плагина
-\SetKwInput{KwData}{Исходные параметры}
-\SetKwInput{KwResult}{Результат}
-\SetKwInput{KwIn}{Входные данные}
-\SetKwInput{KwOut}{Выходные данные}
-\SetKwIF{If}{ElseIf}{Else}{если}{тогда}{иначе\ если}{иначе}{конец\ условия}
-\SetKwFor{While}{до\ тех\ пор,\ пока}{выполнять}{конец\ цикла}
-\SetKw{KwTo}{от}
-\SetKw{KwRet}{возвратить}
-\SetKw{Return}{возвратить}
-\SetKwBlock{Begin}{начало\ блока}{конец\ блока}
-\SetKwSwitch{Switch}{Case}{Other}{Проверить\ значение}{и\ выполнить}{вариант}{в\ противном\ случае}{конец\ варианта}{конец\ проверки\ значений}
-\SetKwFor{For}{цикл}{выполнять}{конец\ цикла}
-\SetKwFor{ForEach}{для\ каждого}{выполнять}{конец\ цикла}
-\SetKwRepeat{Repeat}{повторять}{до\ тех\ пор,\ пока}
-\SetAlgorithmName{Алгоритм}{алгоритм}{Список алгоритмов}
+\SetKwInput{KwData}{Input parameters}
+\SetKwInput{KwResult}{Result}
+\SetKwInput{KwIn}{Input data}
+\SetKwInput{KwOut}{Output Data}
+\SetKwIF{If}{ElseIf}{Else}{if}{then}{else\ if}{else}{end\ of\ condition}
+\SetKwFor{While}{while}{execute}{end\ of\ loop}
+\SetKw{KwTo}{to}
+\SetKw{KwRet}{return}
+\SetKw{Return}{return}
+\SetKwBlock{Begin}{begin\ block}{end\ block}
+\SetKwSwitch{Switch}{Case}{Other}{Check\ a\ value}{and\ execute}{a\ case}{otherwise}{end\ of\ case}{end\ of\ value\ check}
+\SetKwFor{For}{loop}{execute}{end\ of\ loop}
+\SetKwFor{ForEach}{for\ each}{execute}{end\ of\ loop}
+\SetKwRepeat{Repeat}{repeat}{while}
+\SetAlgorithmName{Algorithm}{algorithm}{List of algorithms}
+
 
 \usetikzlibrary{shapes,arrows}
 
@@ -60,60 +61,60 @@
 \setbeamercolor{color1}{bg=red!40!green,fg=black}
 \setbeamercolor{uppercol}{fg=white,bg=brown}
 
-\title{Визуализация управляющего графа}
+\title{Control Flow Graph Visualization in\\ Compiled Software Engineering}
 
-\author[Михайлов А. А.]{Михайлов Андрей Анатольевич\\\texttt{\scriptsize{mikhailov@icc.ru}}}
+\author[A.~Mikhailov]{Andrey Mikhailov${}^{*}$, Aleksey Hmelnov${}^{*}$, Evgeny Cherkashin${}^{*\;**}$ and Igor Bychkov\\\texttt{\scriptsize{\{mikhailov,alex,eugeneai,bychkov\}@icc.ru}}}
 
 \institute[ИДСТУ СО РАН]
 {
-    Институт динамики систем и теории управления Сибирского отделения Российской академии наук (ИДСТУ СО РАН)\\ 
+    Институт динамики систем и теории управления Сибирского отделения Российской академии наук (ИДСТУ СО РАН)\\
     \vspace{0.7cm}
 }
 
 \date{\scriptsize{
 \\
     \vspace{0.3cm}}
-ИДСТУ СО РАН
+ISDCT SB RAS, INRTU
 \\
-23 июня 2015 г.
+31 May 2016
 \\
-г. Иркутск
+Opatija, Croatia
 }
 \begin{document}
 
 %\титульный
-\subsection{Delphi}
+\section{Delphi}
 \maketitle
 
 %\граф потоков управления
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
-\frametitle{Управляющий граф}
+\frametitle{Control flow graph}
 
 \tiny{
 
 \newtheorem{Def}{Определение}[section]
 \begin{Def}
 Ориентированный граф $G(X,U)$ называется графом потоков управления, если выполняются следующие условия:
-			
+
 	\begin{enumerate}
-		\item[1)]	
+		\item[1)]
 		граф $G$ не содержит параллельных дуг;
-		\item[2)] 
+		\item[2)]
 		в множестве вершин графа выделена одна вершина $start$, которая является входом графа;
-		\item[3)] 
+		\item[3)]
 		в множестве вершин графа выделена одна вершина $end$, которая является выходом графа;
-		\item[4)] 
-		каждая вершина $x \in X$ достижима из $start$;		
-		\item[5)] 	
-		из каждой вершины $x \in X$ достижима вершина $end$;			
+		\item[4)]
+		каждая вершина $x \in X$ достижима из $start$;
+		\item[5)]
+		из каждой вершины $x \in X$ достижима вершина $end$;
 	\end{enumerate}
 \end{Def}
 
 \newtheorem{DOM}{Определение}[section]
 \begin{Def}
-	Узел $x$ является доминатором $y$ ($x$ $dom$ $y$) в направленном графе, если любой путь от $start$ до $y$ включает узел $x$. 
+	Узел $x$ является доминатором $y$ ($x$ $dom$ $y$) в направленном графе, если любой путь от $start$ до $y$ включает узел $x$.
 \end{Def}
 
 \newtheorem{IDOM}{Определение}[section]
@@ -126,7 +127,7 @@
 
 %\ иерархический раскладчик
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{Метод поуровнего изображения направленных графов (иерархический раскладчик)}
 \scriptsize{
@@ -136,27 +137,27 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 \begin{enumerate}
 	\item \textbf{Распределение вершин по уровням.} Каждой вершине присваивается ее ранг. При этом все дуги могут следовать только от меньшего ранга к большему. Между вершинами одного ранга не может быть дуг. Для распределения рангов вершин могут использоваться различные методы, в простейшем случае в качестве ранга может быть использована длина пути при обходе в глубину.
 	\item \textbf{Определение порядка вершин на уровнях.} Вершины упорядочиваются внутри уровня таких образом, чтобы минимизировать количества пересечений дуг. Самым распространенным способом решения этой задачи является <<метод медиан>>.
-	\item \textbf{Определение координат вершин на уровне.} На каждой уровне каждой вершине присваиваются координаты таким образом, чтобы граф соответствовал определённым для него эстетическим критериям. 
+	\item \textbf{Определение координат вершин на уровне.} На каждой уровне каждой вершине присваиваются координаты таким образом, чтобы граф соответствовал определённым для него эстетическим критериям.
 	\item \textbf{Проведение дуг.}	Обычно, эту задачу выделяют в отдельный этап, только в том случае, если дуги изображаются не в виде прямых.
 \end{enumerate}
 }
 \end{frame}
 
-%\критерии качества визуализации 
+%\критерии качества визуализации
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{Критерии качества визуализации гарфа}
 \tiny{
 	\newtheorem{vis}{Определение}
 	\begin{vis}
-	Раскладка графа на плоскости (или в пространстве) — это отображение вершин и ребер графа в множество точек плоскости (или пространства). 
+	Раскладка графа на плоскости (или в пространстве) — это отображение вершин и ребер графа в множество точек плоскости (или пространства).
 	\end{vis}
-	
+
 	\begin{itemize}
 	\item \textit{Изобразительное соглашение} — это одно из основных правил, которому должно удовлетворять изображение графа, чтобы быть допустимым.
 
-	\item \textit{Эстетические критерии} определяют такие свойства изображений, которые желательно применять в наибольшей степени, насколько это возможно, чтобы повысить наглядность изображения. 
+	\item \textit{Эстетические критерии} определяют такие свойства изображений, которые желательно применять в наибольшей степени, насколько это возможно, чтобы повысить наглядность изображения.
 
 	\item \textit{Ограничения.} Если соглашения и эстетические критерии формулируются по отношению ко всему графу и его изображению, то ограничения относятся к отдельным подграфам и частям изображений.
 \end{itemize}
@@ -172,7 +173,7 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 
 %\изобразительные соглашения
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{Изобразительные соглашения для уграфа}
 \footnotesize{
@@ -200,7 +201,7 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 	\end{minipage}
 \begin{minipage}[b]{0.24\linewidth}
 	\center{\includegraphics[width=0.35\textwidth]{Pic/BlocksD.eps} \\ г) начало-конец}
-	\end{minipage}	
+	\end{minipage}
 	\caption{Типы элементов.}
 	\label{fig:Blocks}
 \end{figure}
@@ -208,7 +209,7 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 
 %\TT регион
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{TT - регион}
 
@@ -222,11 +223,11 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 \begin{Def}
 	Пара узлов $(a, b)$ управляющего графа $G$ образует TT-регион (Two Terminal), если
 	\begin{enumerate}
-		\item[1)]	
+		\item[1)]
 			$a$ idom $b$;
-		\item[2)] 
+		\item[2)]
 			$b$ postidom $a$;
-		\item[3)] 	
+		\item[3)]
 			любой цикл в управляющем графе, содержащий $a$, содержит также и $b$, и наоборот;
 	\end{enumerate}
 \end{Def}
@@ -244,7 +245,7 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 
 %\выделяемые регионы
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{Выделяемые регионы}
 \begin{figure}[htbp]
@@ -257,40 +258,39 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 
 %\алгоритм структурирования
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{Изобразительные соглашения}
-
-\small{
+\small{%
 \begin{algorithm}[H]
-\SetAlgoLined %% Это соединяет линиями логические части 
+\SetAlgoLined %% Connects logical parts with lines
 \KwData{G, D, P}
-\KwResult{Абстрактный узел, содержащий в себе иерархию вложенных регионов} 
+\KwResult{An abstract node containing a hierarchy of folded subgraphs}
 %\While{$|E| \neq 0$ и $|V| \neq 1$}{
-	\ForEach{$v$ из $D$ в обратном порядке}{
-		\ForEach{$p \in дети(v)$}{
-			\If{$p$ $pidom$ $v$}{			
-				$S$ \leftarrow $дети(v)$ \setminus $p $ \\
-				\If{$КлассифицироватьРегион(S)$ \neq $ \textit{неопределенный} $}{
-					НаложитьШаблон($S$)
+	\ForEach{$v \in D$ in a backward breadth-first order}{
+		\ForEach{$p \in Children(v)$}{
+			\If{$p\quad pidom\quad v$}{
+				$S \leftarrow Children(v) \setminus p $ \\
+				\If{$Classify\_Region(S) \neq \textit{undeterminated}$}{
+					$Apply\_Template(S)$
 				}\Else{
-					ИерархическийРаскладчик($S \cup p$) \\
-					ВыделитьНеопределенныйРегион($S$) 
+					$Hierarchical\_Layout(S \cup p)$ \\
+					$Recognize\_Undeterminanted\_Region(S)$
 				}
-				Модифицировать($G,D,P$)
+				$Modify(G,D,P)$
 			}
-		}	
+		}
 	}
 %}
-\caption{Алгоритм структурирования}
+\caption{Algorithm of control flow graph structuring}
 \label{alg:struct}
-\end{algorithm}	
+\end{algorithm}%
 }
 \end{frame}
 
 %\Визуализация
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{Процесс раскладки}
 
@@ -307,7 +307,7 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 
 %\Результат раскладки
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{Результат раскладки}
 \begin{figure}[htbp]
@@ -327,7 +327,7 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 
 %\Тестирование
 
-\subsection{Delphi}
+\section{Delphi}
 \begin{frame}
 \frametitle{Результаты тестирования}
 \footnotesize{
@@ -348,7 +348,12 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 \end{frame}
 
 
-\subsection{Delphi}
+\section{Delphi}
 \maketitle
 
 \end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
