@@ -63,12 +63,13 @@
 
 \title{Control Flow Graph Visualization in\\ Compiled Software Engineering}
 
-\author[A.~Mikhailov]{Andrey Mikhailov${}^{*}$, Aleksey Hmelnov${}^{*}$, Evgeny Cherkashin${}^{*\;**}$ and Igor Bychkov\\\texttt{\scriptsize{\{mikhailov,alex,eugeneai,bychkov\}@icc.ru}}}
+\author[A.~Mikhailov]{Andrey Mikhailov${}^{*}$, Aleksey Hmelnov${}^{*}$, \underline{Evgeny Cherkashin}${}^{*\;**}$,\\ Igor Bychkov${}^{*}$\\\texttt{\scriptsize{\{mikhailov,alex,eugeneai,bychkov\}@icc.ru}}}
 
-\institute[ИДСТУ СО РАН]
-{
-    Институт динамики систем и теории управления Сибирского отделения Российской академии наук (ИДСТУ СО РАН)\\
-    \vspace{0.7cm}
+
+\institute[ISDCT SB RAS, INRTU]
+{${}^{*}$Matrosov Institute for System Dynamics and Control Theory of Siberian Branch of Russian Academy of Sciences; \\[0.5em]
+${}^{**}$Irkutsk National Research Irkutsk Technical University,\\
+Irkutsk, Russian Federation\\[0.7cm]
 }
 
 \date{\scriptsize{
@@ -92,55 +93,45 @@ Opatija, Croatia
 \begin{frame}
 \frametitle{Control flow graph}
 
-\tiny{
-
-\newtheorem{Def}{Определение}[section]
+\newtheorem{Def}{Definition}[section]
 \begin{Def}
-Ориентированный граф $G(X,U)$ называется графом потоков управления, если выполняются следующие условия:
-
-	\begin{enumerate}
-		\item[1)]
-		граф $G$ не содержит параллельных дуг;
-		\item[2)]
-		в множестве вершин графа выделена одна вершина $start$, которая является входом графа;
-		\item[3)]
-		в множестве вершин графа выделена одна вершина $end$, которая является выходом графа;
-		\item[4)]
-		каждая вершина $x \in X$ достижима из $start$;
-		\item[5)]
-		из каждой вершины $x \in X$ достижима вершина $end$;
-	\end{enumerate}
+An directed graph $G(V,E)$ is a \textbf{control flow graph} if the following holds:
+\begin{enumerate}
+\item graph $G$ does not contain multiple edges;
+\item node $start\in V$ is the only entrance to the graph;
+\item node $end \in V$ is the exit from the graph;
+\item each node $v \in V$ is accessible from $start$;
+\item node $end$ is accessible from each node $v \in V$.
+\end{enumerate}
+%If a control flow graph has more than one terminal node, the terminal nodes are connected to one new fictitious terminal node.
 \end{Def}
 
-\newtheorem{DOM}{Определение}[section]
+\newtheorem{DOM}{Definition}[section]
 \begin{Def}
-	Узел $x$ является доминатором $y$ ($x$ $dom$ $y$) в направленном графе, если любой путь от $start$ до $y$ включает узел $x$.
+A node $x$ is a \textbf{dominator} of $y$ ($x\quad dom\quad y$) in a directed graph, if any path from $start$ to $y$ includes $x$.
 \end{Def}
 
-\newtheorem{IDOM}{Определение}[section]
+\newtheorem{IDOM}{Definition}[section]
 \begin{Def}
-	Узел $x$ является непосредственным доминатором $y$ ($x$ $idom$ $y$), если $x$ $dom$ $y$, и не существует такого промежуточного узла $P$, что $x$ $dom$ $P$ и $P$ $dom$ $y$.
+A node $x$ is an \textbf{immediate dominator} of $y$ ($x\quad idom\quad y$), if $x\quad dom\quad y$ and there are no such $p$ that $x\quad dom\quad p$ and $p\quad dom\quad y$.
 \end{Def}
 
-}
+%A node $x$ is a \emph{postdominator} of $y$ ($x\quad pdom\quad y$), if any path from $y$ to $end$ includes $x$.  By convention, a node dominates and postdominates itself.    A node $x$ is an \emph{immediate postdominator} of $y$ ($x\quad pidom\quad y$), if $x\quad pdom\quad y$ and there are no such $p$ that $x\quad pdom\quad p$ and $p\quad pdom\quad y$.
+
 \end{frame}
 
 %\ иерархический раскладчик
 
 \section{Delphi}
 \begin{frame}
-\frametitle{Метод поуровнего изображения направленных графов (иерархический раскладчик)}
-\scriptsize{
-
-uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGraph
-
+\frametitle{Hierarchic layout engine}
+\textbf{Software:} uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGraph.
 \begin{enumerate}
-	\item \textbf{Распределение вершин по уровням.} Каждой вершине присваивается ее ранг. При этом все дуги могут следовать только от меньшего ранга к большему. Между вершинами одного ранга не может быть дуг. Для распределения рангов вершин могут использоваться различные методы, в простейшем случае в качестве ранга может быть использована длина пути при обходе в глубину.
-	\item \textbf{Определение порядка вершин на уровнях.} Вершины упорядочиваются внутри уровня таких образом, чтобы минимизировать количества пересечений дуг. Самым распространенным способом решения этой задачи является <<метод медиан>>.
-	\item \textbf{Определение координат вершин на уровне.} На каждой уровне каждой вершине присваиваются координаты таким образом, чтобы граф соответствовал определённым для него эстетическим критериям.
-	\item \textbf{Проведение дуг.}	Обычно, эту задачу выделяют в отдельный этап, только в том случае, если дуги изображаются не в виде прямых.
+\item \textbf{Distribution of graph nodes between layers.} Each node is assigned a rank.  All directed edges can connect nodes from a lower rank to a higher one.  Rank distribution of the nodes is performed, \emph{e.g.}, on the base of path length calculation in depth-first graph traversal procedure.
+\item \textbf{Defining order on the nodes in a layer.} The nodes of a layer are ordered according to principle of minimization of intersections of edges, e.g., by means of Method of median.
+\item \textbf{Figuring out of the node coordinates in a layer.} Each node of each layer is assigned a coordinate so as the graph will correspond to predefined aesthetic criteria.
+\item \textbf{Edge drawing.} The edges are drawn according to rules of visualization, for example, as arrows.
 \end{enumerate}
-}
 \end{frame}
 
 %\критерии качества визуализации
@@ -149,7 +140,7 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 \begin{frame}
 \frametitle{Критерии качества визуализации гарфа}
 \tiny{
-	\newtheorem{vis}{Определение}
+	\newtheorem{vis}{Definition}
 	\begin{vis}
 	Раскладка графа на плоскости (или в пространстве) — это отображение вершин и ребер графа в множество точек плоскости (или пространства).
 	\end{vis}
@@ -214,12 +205,12 @@ uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGr
 \frametitle{TT - регион}
 
 \scriptsize{
-\newtheorem{TT}{Определение}[section]
+\newtheorem{TT}{Definition}[section]
 \begin{Def}
 	TT-регион (Two Terminal Region) --- это подграф в управляющем графе, который имеет один вход и один выход.
 \end{Def}
 
-\newtheorem{TTreg}{Определение}[section]
+\newtheorem{TTreg}{Definition}[section]
 \begin{Def}
 	Пара узлов $(a, b)$ управляющего графа $G$ образует TT-регион (Two Terminal), если
 	\begin{enumerate}
