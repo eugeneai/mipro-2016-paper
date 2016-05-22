@@ -138,28 +138,24 @@ A node $x$ is an \textbf{immediate dominator} of $y$ ($x\quad idom\quad y$), if 
 
 \section{Delphi}
 \begin{frame}
-\frametitle{Критерии качества визуализации гарфа}
-\tiny{
-	\newtheorem{vis}{Definition}
-	\begin{vis}
-	Раскладка графа на плоскости (или в пространстве) — это отображение вершин и ребер графа в множество точек плоскости (или пространства).
-	\end{vis}
+\frametitle{Quality criteria of graph visualization}
+
+%	\newtheorem{vis}{Definition}
+%	\begin{vis}
+A display of the nodes and the edges of a graph on a surface (or in a 3d-space) is referred to as a \emph{graph layout}.
+%	\end{vis}
 
 	\begin{itemize}
-	\item \textit{Изобразительное соглашение} — это одно из основных правил, которому должно удовлетворять изображение графа, чтобы быть допустимым.
-
-	\item \textit{Эстетические критерии} определяют такие свойства изображений, которые желательно применять в наибольшей степени, насколько это возможно, чтобы повысить наглядность изображения.
-
-	\item \textit{Ограничения.} Если соглашения и эстетические критерии формулируются по отношению ко всему графу и его изображению, то ограничения относятся к отдельным подграфам и частям изображений.
+\item \textbf{Visual arrangement} is the main set of rules that a graph representation must obey to be acceptable as a desired result, \textit{e.g.}, to visualize programs as a flowchart, the rules of flowchart layout is used.
+\item \textbf{Aesthetics} is a subset of the criteria that defines attributes of the constructed image, \textbf{improving visual quality}.
+\item \textbf{Restrictions} are a subset of the criteria that define layout rules for specific elements and subgraphs of the constructed image, \textit{e.g.}, place root at the center of image, place nodes outside of a region.
 \end{itemize}
-
 	\begin{figure}[htbp]
 		\centering
-			\includegraphics[width=0.50\textwidth]{Pic/Pic1.eps}
-		\caption{Разные способы визуализации одного и того же графа}
+			\includegraphics[width=0.40\textwidth]{Pic/Pic1.eps}
+                \caption{Various layouts of the same graph}
 		\label{fig:VisExample}
 	\end{figure}
-}
 \end{frame}
 
 %\изобразительные соглашения
