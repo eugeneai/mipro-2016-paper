@@ -162,35 +162,28 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 \section{Delphi}
 \begin{frame}
-\frametitle{Изобразительные соглашения для уграфа}
-\footnotesize{
-	\begin{enumerate}
-		\item[а)]
-			\textbf{Блок действия.}  Представляет собой узел, передача управления из которого осуществляется только в одном направлении.
-		\item[б)]
-			\textbf{Логический блок (блок условия).} Соответствует условному оператору в высокоуровневых языках, а в графе узлу расхождения потока управления.
-		\item[в)]
-			\textbf{Граница цикла.} Состоит из двух частей, обозначающих начало и конец операций, выполняемых внутри цикла.
-		\item[г)]
-			\textbf{Блок начало-конец (пуск-остановка).} Отображает вход и выход в функцию (программу).
+\frametitle{Visual arrangements for flowcharts}
+\begin{enumerate}
+\item [a)]\textbf{Operator shape} represents a node where the control flow passed only one direction.
+\item [b)]\textbf{Branching shape} corresponds to conditional operators in high-level programming languages; in a control flow graph it is a node, where flow control splits up.
+\item [c)]\textbf{Cycle edge shapes} denote two graph nodes, one is for beginning of the cycle and one for its end, the cycle body is located between these shapes.
+\item [d)]\textbf{Starting and terminal shapes} mark the entrance and the exit from a function or a program.
 	\end{enumerate}
-}
+
 \begin{figure}[htbp]
-	\begin{minipage}[b]{0.24\linewidth}
-	\center{\includegraphics[width=0.35\textwidth]{Pic/BlocksA.eps} \\ а) блок действия}
-	\end{minipage}
-\hfill
-\begin{minipage}[b]{0.24\linewidth}
-	\center{\includegraphics[width=0.35\textwidth]{Pic/BlocksB.eps} \\ б) логический блок}
-	\end{minipage}
-\begin{minipage}[b]{0.24\linewidth}
-	\center{\includegraphics[width=0.5\textwidth]{Pic/BlocksC.eps} \\ в) границы цикла}
-	\end{minipage}
-\begin{minipage}[b]{0.24\linewidth}
-	\center{\includegraphics[width=0.35\textwidth]{Pic/BlocksD.eps} \\ г) начало-конец}
-	\end{minipage}
-	\caption{Типы элементов.}
-	\label{fig:Blocks}
+  \begin{minipage}[b]{0.24\linewidth}
+    \center{\includegraphics[width=0.35\textwidth]{Pic/BlocksA.eps} \\ \footnotesize\emph{a})\\ operator}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.24\linewidth}
+    \center{\includegraphics[width=0.35\textwidth]{Pic/BlocksB.eps} \\ \footnotesize\emph{b})\\ branching}
+  \end{minipage}
+  \begin{minipage}[b]{0.24\linewidth}
+    \center{\includegraphics[width=0.5\textwidth]{Pic/BlocksC.eps} \\ \footnotesize\emph{c})\\ cycle edges}
+  \end{minipage}
+  \begin{minipage}[b]{0.24\linewidth}
+    \center{\includegraphics[width=0.35\textwidth]{Pic/BlocksD.eps} \\ \footnotesize\emph{d})\\ start/termination}
+  \end{minipage}
 \end{figure}
 \end{frame}
 
@@ -198,24 +191,20 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 \section{Delphi}
 \begin{frame}
-\frametitle{TT - регион}
+\frametitle{Two terminal (TT) region}
 
-\scriptsize{
 \newtheorem{TT}{Definition}[section]
 \begin{Def}
-	TT-регион (Two Terminal Region) --- это подграф в управляющем графе, который имеет один вход и один выход.
-\end{Def}
+A subgraph having one entry and one exit node is a \emph{TT region}.
 
-\newtheorem{TTreg}{Definition}[section]
-\begin{Def}
-	Пара узлов $(a, b)$ управляющего графа $G$ образует TT-регион (Two Terminal), если
+A node pair $\langle a, b\rangle$ of a graph $G$ is a TT region if
 	\begin{enumerate}
 		\item[1)]
 			$a$ idom $b$;
 		\item[2)]
 			$b$ postidom $a$;
 		\item[3)]
-			любой цикл в управляющем графе, содержащий $a$, содержит также и $b$, и наоборот;
+			any graph cycle containing $a$ also contains $b$ and vice versa.
 	\end{enumerate}
 \end{Def}
 
@@ -223,10 +212,9 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=0.5\textwidth]{Pic/TTRegion.eps}
-	\caption{TT-регион}
+	\caption{A two terminal region}
 	\label{fig:TTRegion}
 \end{figure}
-}
 
 \end{frame}
 
@@ -234,11 +222,11 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 \section{Delphi}
 \begin{frame}
-\frametitle{Выделяемые регионы}
+\frametitle{Recognizable regions}
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=1\textwidth]{Pic/Reg.eps}
-	\caption{Выделяемые шаблоны}
+	\caption{Patterns of regions}
 	\label{fig:Regions}
 \end{figure}
 \end{frame}
@@ -247,7 +235,7 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 \section{Delphi}
 \begin{frame}
-\frametitle{Изобразительные соглашения}
+\frametitle{Algorithm of control flow graph structuring}
 \small{%
 \begin{algorithm}[H]
 \SetAlgoLined %% Connects logical parts with lines
@@ -269,8 +257,6 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 		}
 	}
 %}
-\caption{Algorithm of control flow graph structuring}
-\label{alg:struct}
 \end{algorithm}%
 }
 \end{frame}
@@ -279,14 +265,14 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 \section{Delphi}
 \begin{frame}
-\frametitle{Процесс раскладки}
+\frametitle{Layout procedure}
 
-\small{Процесс раскладки происходит рекурсивно сверху вниз, начиная с региона верхнего уровня. Для этого региона задаются начальные координаты. Далее, если у региона есть шаблон, применяются правила отображения, определенные в нем.}
+The layout process is a top-down recursive procedure of region recognition and visualization.  For the top region the initial coordinates are specified.
 
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=0.4\textwidth]{Pic/IfThenElse.eps}
-	\caption{Шаблон отображения if-then-else}
+	\caption{pattern of \texttt{if-then-else} operator}
 	\label{fig:IfThenElse}
 \end{figure}
 
@@ -296,19 +282,15 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 \section{Delphi}
 \begin{frame}
-\frametitle{Результат раскладки}
+\frametitle{A layout example of a control flow graph}
 \begin{figure}[htbp]
 	\begin{minipage}[b]{0.49\linewidth}
-	\center{\includegraphics[width=0.35\textwidth]{Pic/Hier.eps} \\ а) Иерархический раскладчик}
+	\center{\includegraphics[width=0.5\textwidth]{Pic/Hgraph.pdf} \\ a) Hierarchical layout}
 	\end{minipage}
 \hfill
 \begin{minipage}[b]{0.49\linewidth}
-	\center{\includegraphics[width=0.5\textwidth]{Pic/Struct.eps} \\ б) Структурный раскладчик}
+	\center{\includegraphics[width=0.5\textwidth]{Pic/Sgraph.pdf} \\ b) Structural layout}
 	\end{minipage}
-	\tiny{
-	\caption{Результат раскладки управляющего графа.}
-	}
-	\label{fig:image1}
 \end{figure}
 \end{frame}
 
@@ -316,24 +298,22 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 \section{Delphi}
 \begin{frame}
-\frametitle{Результаты тестирования}
-\footnotesize{
+\frametitle{Testing results}
 \begin{itemize}
-	\item 197.parser\footnote{Синтаксический разбор для естественного языка}
-	\item 252.eon\footnote{Трассировка лучей}
+	\item 197.parser\footnote{Syntactic parsing for natural language}
+	\item 252.eon\footnote{Ray tracing}
 \end{itemize}
 
-В результате около 70\% графов удалось структурировать полностью (не содержат <<неопределенных>> регионов). Около 96\% всех выделенных регионов являются структурными.
+About 70\% of graphs are structured completely \textbf{without undeterminanted} regions.  Around 96\% of recognized regions are structured.
 
-Основными преимуществами данного раскладчика являются:
+Main advantages of the approach:
 \begin{itemize}
-	\item Простота изменения правил визуализации графа посредством задания правил отображения шаблонов.
-	\item Однообразное отображение подграфов, соответствующих одним и тем же операторам в высокоуровневых языках программирования.
-	\item Возможность выделять специальным образом узлы и дуги графа, используя семантику, полученную в процессе структурирования графа.
+	\item Visual arrangement rule set change by means of new templates.
+	\item Similar visualization for the same operators of different programming languages.
+	\item The possibility to emphasize graph regions according to a recognized semantics.
 \end{itemize}
-}
+
 \end{frame}
-
 
 \section{Delphi}
 \maketitle
