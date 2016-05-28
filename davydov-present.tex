@@ -1,0 +1,155 @@
+\documentclass{beamer}
+% \RequirePackage[T2A]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[english,russian]{babel}
+
+\usepackage{listings}
+\usepackage{courier}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+
+\usepackage{algorithm2e}
+
+ % Перевод плагина
+\SetKwInput{KwData}{Input parameters}
+\SetKwInput{KwResult}{Result}
+\SetKwInput{KwIn}{Input data}
+\SetKwInput{KwOut}{Output Data}
+\SetKwIF{If}{ElseIf}{Else}{if}{then}{else\ if}{else}{end\ of\ condition}
+\SetKwFor{While}{while}{execute}{end\ of\ loop}
+\SetKw{KwTo}{to}
+\SetKw{KwRet}{return}
+\SetKw{Return}{return}
+\SetKwBlock{Begin}{begin\ block}{end\ block}
+\SetKwSwitch{Switch}{Case}{Other}{Check\ a\ value}{and\ execute}{a\ case}{otherwise}{end\ of\ case}{end\ of\ value\ check}
+\SetKwFor{For}{loop}{execute}{end\ of\ loop}
+\SetKwFor{ForEach}{for\ each}{execute}{end\ of\ loop}
+\SetKwRepeat{Repeat}{repeat}{while}
+\SetAlgorithmName{Algorithm}{algorithm}{List of algorithms}
+
+
+\usetikzlibrary{shapes,arrows}
+
+%\usetheme{CambridgeUS}%{Warsaw}
+%\usetheme {Madrid}
+%\useoutertheme {shadow}
+%\usecolortheme{beaver}%{structure черный}%{seagull серый}%{lily желтый}%{beaver красный}
+%\usefonttheme{structurebold}
+%\setbeamerfont{framesubtitle}{size=\large}
+%\useoutertheme{infolines}
+%\useoutertheme{split}
+%I DONT WANT TO SEE THOSE NAVIGATION SYMBOLS
+%\setbeamertemplate{navigation symbols}{}
+
+% \mode<presentation>
+% {
+%     \usefonttheme[onlymath]{serif}
+% \usetheme {Madrid}
+% %\useoutertheme {shadow}
+% %\usecolortheme{volverine}%{structure черный}%{seagull серый}%{lily желтый}%{beaver красный}
+% \usefonttheme{structurebold}
+% \setbeamerfont{framesubtitle}{size=\large}
+% \useoutertheme{infolines}
+% %\useoutertheme{split}
+% %I DONT WANT TO SEE THOSE NAVIGATION SYMBOLS
+% \setbeamertemplate{navigation symbols}{}
+% \setbeamertemplate{footline}
+% }
+\usetheme{Warsaw}
+\usecolortheme{crane}
+\beamertemplatenavigationsymbolsempty
+
+\hypersetup{
+    bookmarks=true,         % show bookmarks bar?
+    unicode=true,           % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=false,        % show Acrobat’s toolbar?
+    pdfmenubar=false,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={Компьютерная алгебра в задачах оптимизации},    % title
+    pdfauthor={Evgeny Cherkashin, Seseg Badmatsyrenova},     % author
+    pdfsubject={symbolic computations},   % subject of the document
+    pdfnewwindow=true,      % links in new PDF window
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=red,          % color of internal links (change box color with linkbordercolor)
+    citecolor=green,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=blue           % color of external links
+}
+
+\usepackage{iftex,ifxetex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage[russian]{babel}
+  \usepackage{lmodern}
+  \usefonttheme{serif}
+\else
+  \ifluatex
+    \usepackage{unicode-math}
+    \defaultfontfeatures{Ligatures=TeX,Numbers=OldStyle}
+    \setmathfont{Latin Modern Math}
+    \setsansfont{Linux Biolinum O}
+    \usefonttheme{professionalfonts}
+    \setmathfont[
+        Ligatures=TeX,
+        Scale=MatchLowercase,
+        math-style=upright,
+        vargreek-shape=unicode
+        ]{euler.otf}
+  \fi
+\fi
+
+
+%\setbeamercolor{color1}{bg=red!40!green,fg=black}
+%\setbeamercolor{uppercol}{fg=white,bg=brown}
+%\setbeamertemplate{background canvas}[vertical shading][bottom=white!80!cyan!20,top=cyan!10]
+
+\title{Positive Constructed Formulas Preprocessing\\ for Automatic Deduction\thanks{Supported by Russian Science Foundation, project No. 16-11-00053}}
+
+\author[A.~Davydov]{Artem~Davydov, Alexander~Larionov, \underline{Evgeny~Cherkashin}\\\texttt{\scriptsize{ethrik@gmail.com, bootfrost@zoho.com eugeneai@icc.ru}}}
+
+
+\institute[ISDCT SB RAS, INRTU]
+{Matrosov Institute for System Dynamics and Control Theory of Siberian Branch of Russian Academy of Sciences; \\[0.5em]
+Irkutsk National Research Irkutsk Technical University,\\
+Irkutsk, Russian Federation\\[0.7cm]
+}
+
+\date{\scriptsize{
+\\
+    \vspace{0.3cm}}
+ISDCT SB RAS, INRTU
+\\
+31 May 2016
+\\
+Opatija, Croatia
+}
+\begin{document}
+\maketitle{}
+\begin{frame}
+\frametitle{Features of PCF}
+The PCF calculus is both \textbf{machine-oriented}, and \textbf{human-oriented}, naturally it was aimed at solving the problems of \textbf{dynamic systems control}.
+
+Features of PCFs follows:
+\begin{enumerate}
+\item unique inference rule and simple scheme of axioms;
+\item modifyability
+  of semantics (constructive, monotonic, temporal, etc.);
+\item
+  it is possible to construct intuitionistic inferences of some
+  non-Horn formulas;
+\item explicit usage of $\forall$-- and
+  $\exists$--quantifiers;
+\item scolemization procedure is not required.
+\end{enumerate}
+\end{frame}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
