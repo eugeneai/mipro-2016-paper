@@ -63,7 +63,7 @@
 
 \title{Control Flow Graph Visualization in\\ Compiled Software Engineering}
 
-\author[A.~Mikhailov]{Andrey Mikhailov${}^{*}$, Aleksey Hmelnov${}^{*}$, \underline{Evgeny Cherkashin}${}^{*\;**}$,\\ Igor Bychkov${}^{*}$\\\texttt{\scriptsize{\{mikhailov,alex,eugeneai,bychkov\}@icc.ru}}}
+\author[A.~Mikhailov]{\textbf{Andrey Mikhailov}${}^{*}$, \textbf{Aleksey Hmelnov}${}^{*}$, \\\underline{Evgeny Cherkashin}${}^{*\;**}$, Igor Bychkov${}^{*}$\\\texttt{\scriptsize{\{mikhailov,alex,eugeneai,bychkov\}@icc.ru}}}
 
 
 \institute[ISDCT SB RAS, INRTU]
@@ -84,12 +84,24 @@ Opatija, Croatia
 \begin{document}
 
 %\титульный
-\section{Delphi}
+%\section{Delphi}
 \maketitle
 
 %\граф потоков управления
 
-\section{Delphi}
+\begin{frame}
+  \frametitle{Applications}
+  Control flow graph (CFG) amalysis is a common stage in syntactic approaches of data mining and pattern recognition, e.g., in source and binary code analysis in software and instrumental tool quality assessment:
+  \begin{itemize}
+  \item compiled binary code productivity;
+  \item quality of compiler and system libraries;
+  \item features of hardware platforms;
+  \item reconstruction of legacy source code;
+  \item malware and virus code analysis.
+  \end{itemize}
+\end{frame}
+
+%\section{Delphi}
 \begin{frame}
 \frametitle{Control flow graph}
 
@@ -122,7 +134,7 @@ A node $x$ is an \textbf{immediate dominator} of $y$ ($x\quad idom\quad y$), if 
 
 %\ иерархический раскладчик
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{Hierarchic layout engine}
 \textbf{Software:} uDraw (daVinci), VCG, Graphlet, GraVis, Graph Drawing Server, graphViz, VisualGraph.
@@ -136,7 +148,7 @@ A node $x$ is an \textbf{immediate dominator} of $y$ ($x\quad idom\quad y$), if 
 
 %\критерии качества визуализации
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{Quality criteria of graph visualization}
 
@@ -160,7 +172,7 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 %\изобразительные соглашения
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{Visual arrangements for flowcharts}
 \begin{enumerate}
@@ -189,7 +201,7 @@ A display of the nodes and the edges of a graph on a surface (or in a 3d-space) 
 
 %\TT регион
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{Two terminal (TT) region}
 
@@ -220,7 +232,7 @@ A node pair $\langle a, b\rangle$ of a graph $G$ is a TT region if
 
 %\выделяемые регионы
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{Recognizable regions}
 \begin{figure}[htbp]
@@ -233,7 +245,7 @@ A node pair $\langle a, b\rangle$ of a graph $G$ is a TT region if
 
 %\алгоритм структурирования
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{Algorithm of control flow graph structuring}
 \small{%
@@ -263,7 +275,7 @@ A node pair $\langle a, b\rangle$ of a graph $G$ is a TT region if
 
 %\Визуализация
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{Layout procedure}
 
@@ -280,12 +292,15 @@ The layout process is a top-down recursive procedure of region recognition and v
 
 %\Результат раскладки
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{A layout example of a control flow graph}
 \begin{figure}[htbp]
 	\begin{minipage}[b]{0.49\linewidth}
-	\center{\includegraphics[width=0.5\textwidth]{Pic/Hgraph.pdf} \\ a) Hierarchical layout}
+	\center{
+%\includegraphics[width=0.5\textwidth]{Pic/Hgraph.pdf} \\
+\includegraphics[width=0.3\textwidth]{Pic/Hier.pdf} \\
+a) Hierarchical layout}
 	\end{minipage}
 \hfill
 \begin{minipage}[b]{0.49\linewidth}
@@ -296,7 +311,7 @@ The layout process is a top-down recursive procedure of region recognition and v
 
 %\Тестирование
 
-\section{Delphi}
+%\section{Delphi}
 \begin{frame}
 \frametitle{Testing results}
 \begin{itemize}
@@ -315,7 +330,7 @@ Main advantages of the approach:
 
 \end{frame}
 
-\section{Delphi}
+%\section{Delphi}
 \maketitle
 
 \end{document}
