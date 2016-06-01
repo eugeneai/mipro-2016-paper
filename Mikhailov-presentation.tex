@@ -1,7 +1,7 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 % \RequirePackage[T2A]{fontenc}
 \RequirePackage[utf8]{inputenc}
-\RequirePackage[english,russian]{babel}
+%\RequirePackage[english,russian]{babel}
 
 \usepackage{listings}
 \usepackage{courier}
@@ -61,6 +61,30 @@
 \setbeamercolor{color1}{bg=red!40!green,fg=black}
 \setbeamercolor{uppercol}{fg=white,bg=brown}
 
+\usepackage{iftex,ifxetex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  %\usepackage[T1]{fontenc}
+  %\usepackage[russian]{babel}
+  \usepackage{lmodern}
+  \usefonttheme{serif}
+\else
+  \ifluatex
+    \usepackage{unicode-math}
+    \defaultfontfeatures{Ligatures=TeX,Numbers=OldStyle}
+    \setmathfont{Latin Modern Math}
+    \setsansfont{Linux Biolinum O}
+    \usefonttheme{professionalfonts}
+    \setmathfont[
+        Ligatures=TeX,
+        Scale=MatchLowercase,
+        math-style=upright,
+        vargreek-shape=unicode
+        ]{euler.otf}
+  \fi
+\fi
+
+
 \title{Control Flow Graph Visualization in\\ Compiled Software Engineering}
 
 \author[A.~Mikhailov]{\textbf{Andrey Mikhailov}${}^{*}$, \textbf{Aleksey Hmelnov}${}^{*}$, \\\underline{Evgeny Cherkashin}${}^{*\;**}$, Igor Bychkov${}^{*}$\\\texttt{\scriptsize{\{mikhailov,alex,eugeneai,bychkov\}@icc.ru}}}
@@ -91,13 +115,17 @@ Opatija, Croatia
 
 \begin{frame}
   \frametitle{Applications}
-  Control flow graph (CFG) amalysis is a common stage in syntactic approaches of data mining and pattern recognition, e.g., in source and binary code analysis in software and instrumental tool quality assessment:
+  Control flow graph (CFG) analysis is a common stage in syntactic approaches of data mining and pattern recognition, e.g., in source and binary code analysis in software and instrumental tool quality assessment:
   \begin{itemize}
   \item compiled binary code productivity;
   \item quality of compiler and system libraries;
   \item features of hardware platforms;
+  \end{itemize}
+Also CFG is used as a pattern recognition technique in
+  \begin{itemize}
   \item reconstruction of legacy source code;
-  \item malware and virus code analysis.
+  \item malware and virus code analysis;
+  \item Model Driven Engineering software development.
   \end{itemize}
 \end{frame}
 
@@ -284,7 +312,7 @@ The layout process is a top-down recursive procedure of region recognition and v
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=0.4\textwidth]{Pic/IfThenElse.eps}
-	\caption{pattern of \texttt{if-then-else} operator}
+	%\caption{pattern of \texttt{if-then-else} operator}
 	\label{fig:IfThenElse}
 \end{figure}
 
@@ -296,15 +324,15 @@ The layout process is a top-down recursive procedure of region recognition and v
 \begin{frame}
 \frametitle{A layout example of a control flow graph}
 \begin{figure}[htbp]
-	\begin{minipage}[b]{0.49\linewidth}
+	\begin{minipage}[t]{0.45\linewidth}
 	\center{
 %\includegraphics[width=0.5\textwidth]{Pic/Hgraph.pdf} \\
-\includegraphics[width=0.3\textwidth]{Pic/Hier.pdf} \\
+\includegraphics[width=0.3\textwidth]{Pic/Hier.pdf}
 a) Hierarchical layout}
 	\end{minipage}
 \hfill
-\begin{minipage}[b]{0.49\linewidth}
-	\center{\includegraphics[width=0.5\textwidth]{Pic/Sgraph.pdf} \\ b) Structural layout}
+\begin{minipage}[t]{0.49\linewidth}
+	\center{\includegraphics[width=0.44\textwidth]{Pic/Sgraph.pdf} b) Structural layout}
 	\end{minipage}
 \end{figure}
 \end{frame}
@@ -329,10 +357,7 @@ Main advantages of the approach:
 \end{itemize}
 
 \end{frame}
-
-%\section{Delphi}
 \maketitle
-
 \end{document}
 
 %%% Local Variables:
